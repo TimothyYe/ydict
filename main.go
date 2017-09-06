@@ -12,6 +12,7 @@ func query(word string) {
 	doc, err := goquery.NewDocument(fmt.Sprintf("http://dict.youdao.com/w/%s", word))
 	if err != nil {
 		log.Fatal(err)
+		os.Exit(1)
 	}
 
 	// Find the result
