@@ -28,7 +28,9 @@ go get github.com/TimothyYe/ydict
 
 ## Usage
 
+```text
 ydict <word to query>
+```
   
 ## Licence
 
