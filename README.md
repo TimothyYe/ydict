@@ -33,6 +33,10 @@ go get github.com/TimothyYe/ydict
 ```text
 ydict <word to query>
 ```
+
+## Help
+
+Just type "ydict" to get help.
   
 ## Licence
 
