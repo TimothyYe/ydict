@@ -28,6 +28,10 @@ Ydict, another command line dictionary for geeks!
 go get github.com/TimothyYe/ydict
 ```
 
+or 
+
+Download it from [releases](https://github.com/TimothyYe/ydict/releases), and extact it to /usr/bin.
+
 ## Usage
 
 ```text
