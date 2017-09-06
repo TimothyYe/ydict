@@ -20,6 +20,8 @@
 
 Ydict, another command line dictionary for geeks!
 
+![](https://raw.githubusercontent.com/TimothyYe/ydict/master/snapshots/ydict.gif)
+
 ## Install
 
 ```bash
