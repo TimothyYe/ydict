@@ -86,6 +86,6 @@ func main() {
 		os.Exit(0)
 	}
 
-	word := os.Args[1]
-	query(word)
+	words := strings.Join(os.Args[1:], " ")
+	query(words)
 }
