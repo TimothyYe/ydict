@@ -15,7 +15,7 @@ const (
    ██║   ██████╔╝██║╚██████╗   ██║   
    ╚═╝   ╚═════╝ ╚═╝ ╚═════╝   ╚═╝   
 
-YDict V0.1 
+YDict V0.2
 https://github.com/TimothyYe/ydict
 
 `
@@ -23,7 +23,7 @@ https://github.com/TimothyYe/ydict
 
 func displayUsage() {
 	color.Cyan(logo)
-	color.Cyan("Usage: ydict [word]")
+	color.Cyan("Usage: ydict <word to query>")
 }
 
 func IsChinese(str string) bool {
