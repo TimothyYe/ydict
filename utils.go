@@ -1,6 +1,10 @@
 package main
 
-import "github.com/fatih/color"
+import (
+	"unicode"
+
+	"github.com/fatih/color"
+)
 
 const (
 	logo = `
@@ -20,4 +24,13 @@ https://github.com/TimothyYe/ydict
 func displayUsage() {
 	color.Cyan(logo)
 	color.Cyan("Usage: ydict [word]")
+}
+
+func IsChinese(str string) bool {
+	for _, r := range str {
+		if unicode.Is(unicode.Scripts["Han"], r) {
+			return true
+		}
+	}
+	return false
 }
