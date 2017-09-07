@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/fatih/color"
@@ -40,6 +41,45 @@ func query(word string) {
 		result := doc.Find("div#phrsListTab > div.trans-container > ul").Text()
 		color.Blue(result)
 	}
+
+	// Show examples
+	sentences := getSentences(doc, isChinese)
+	if len(sentences) > 0 {
+		fmt.Println()
+		for _, sentence := range sentences {
+			color.Yellow("    %s", sentence[0])
+			color.Magenta("    %s", sentence[1])
+		}
+		fmt.Println()
+	}
+}
+
+func getSentences(doc *goquery.Document, isChinese bool) [][]string {
+	result := [][]string{}
+	doc.Find("#bilingual ul li").Each(func(_ int, s *goquery.Selection) {
+		r := []string{}
+		s.Children().Each(func(ii int, ss *goquery.Selection) {
+			// Ignore source
+			if ii == 2 {
+				return
+			}
+			var sentence string
+			ss.Children().Each(func(iii int, sss *goquery.Selection) {
+				if text := strings.TrimSpace(sss.Text()); text != "" {
+					addSpace := (ii == 1 && isChinese) || (ii == 0 && !isChinese)
+					if addSpace && iii != 0 && text != "." {
+						text = " " + text
+					}
+					sentence += text
+				}
+			})
+			r = append(r, sentence)
+		})
+		if len(r) == 2 {
+			result = append(result, r)
+		}
+	})
+	return result
 }
 
 func main() {
