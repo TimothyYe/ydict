@@ -34,8 +34,6 @@ func query(word string) {
 		doc.Find(".trans-container > ul > p > span.contentTitle").Each(func(i int, s *goquery.Selection) {
 			color.Blue("    %s", s.Find(".search-js").Text())
 		})
-		//result := doc.Find("div#phrsListTab > div.trans-container > ul.wordGroup").Text()
-		//fmt.Println(result)
 	} else {
 		// Find the result
 		result := doc.Find("div#phrsListTab > div.trans-container > ul").Text()
