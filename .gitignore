@@ -16,3 +16,4 @@
 .glide/
 ydict
 .DS_Store
+.env
