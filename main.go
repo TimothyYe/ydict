@@ -32,7 +32,7 @@ func query(word string) {
 		// Find the result
 		fmt.Println()
 		doc.Find(".trans-container > ul > p > span.contentTitle").Each(func(i int, s *goquery.Selection) {
-			color.Yellow("    %s", s.Find(".search-js").Text())
+			color.Green("    %s", s.Find(".search-js").Text())
 		})
 	} else {
 		// Find the result
