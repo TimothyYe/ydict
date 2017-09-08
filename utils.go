@@ -51,13 +51,14 @@ func getExecutePath() string {
 
 func loadEnv() {
 	exPath := getExecutePath()
+	envPath := fmt.Sprintf("%s/.env", exPath)
 
 	// if .env file doesn't exist, just return
 	if _, err := os.Stat(fmt.Sprintf("%s/.env", exPath)); os.IsNotExist(err) {
 		return
 	}
 
-	err := godotenv.Load()
+	err := godotenv.Load(envPath)
 	if err != nil {
 		log.Fatal("Error loading .env file")
 		return
