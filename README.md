@@ -43,6 +43,16 @@ Download it from [releases](https://github.com/TimothyYe/ydict/releases), and ex
 ydict <word to query>
 ```
 
+## SOCKS5 proxy
+
+Start from V0.5, you can use SOCKS5 proxy. At the same directory of ydict, just create a .env file:
+
+```text
+SOCKS5=127.0.0.1:7070
+```
+
+Now all the queries will go through the specified SOCKS5 proxy.
+
 ## Help
 
 Just type "ydict" to get help.
