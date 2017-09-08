@@ -24,6 +24,6 @@ release:
 		go clean
 # Cleans our projects: deletes binaries
 clean:
-		if [ -f ${BINARY} ] ; then rm ${BINARY} ; fi
+		go clean
 
 .PHONY:  clean build
