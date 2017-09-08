@@ -45,7 +45,7 @@ ydict <word to query>
 
 ## SOCKS5 proxy
 
-Starting from V0.5, you can use SOCKS5 proxy. At the same directory of ydict, just create a .env file:
+Starting from V0.5, you can use SOCKS5 proxy. At the same directory of ydict, just create a ```.env``` file:
 
 ```text
 SOCKS5=127.0.0.1:7070
