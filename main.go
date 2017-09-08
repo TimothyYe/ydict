@@ -32,12 +32,12 @@ func query(word string) {
 		// Find the result
 		fmt.Println()
 		doc.Find(".trans-container > ul > p > span.contentTitle").Each(func(i int, s *goquery.Selection) {
-			color.Blue("    %s", s.Find(".search-js").Text())
+			color.Yellow("    %s", s.Find(".search-js").Text())
 		})
 	} else {
 		// Find the result
 		result := doc.Find("div#phrsListTab > div.trans-container > ul").Text()
-		color.Blue(result)
+		color.Green(result)
 	}
 
 	// Show examples
@@ -45,7 +45,7 @@ func query(word string) {
 	if len(sentences) > 0 {
 		fmt.Println()
 		for _, sentence := range sentences {
-			color.Yellow("    %s", sentence[0])
+			color.Green("    %s", sentence[0])
 			color.Magenta("    %s", sentence[1])
 		}
 		fmt.Println()
