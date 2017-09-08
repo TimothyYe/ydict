@@ -20,7 +20,7 @@ const (
    ██║   ██████╔╝██║╚██████╗   ██║   
    ╚═╝   ╚═════╝ ╚═╝ ╚═════╝   ╚═╝   
 
-YDict V0.5
+YDict V0.6
 https://github.com/TimothyYe/ydict
 
 `
