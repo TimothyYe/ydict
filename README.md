@@ -27,7 +27,7 @@ Ydict, another command line dictionary for geeks!
 * Chinese -> English
 * English -> Chinese
 
-## Install
+## Installation
 
 #### Homebrew
 
