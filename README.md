@@ -33,7 +33,7 @@ Ydict, another command line dictionary for geeks!
 
 ```bash
 brew tap timothyye/tap
-brew install timothyye/tap/ydict                                                                                                                                      [08297
+brew install timothyye/tap/ydict
 ```
 
 #### Using Go
