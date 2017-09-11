@@ -29,11 +29,20 @@ Ydict, another command line dictionary for geeks!
 
 ## Install
 
+### Homebrew
+
+```bash
+brew tap timothyye/tap
+brew install timothyye/tap/ydict                                                                                                                                      [08297
+```
+
+### Using Go
+
 ```bash
 go get github.com/TimothyYe/ydict
 ```
 
-or 
+### Manual Installation
 
 Download it from [releases](https://github.com/TimothyYe/ydict/releases), and extact it to /usr/bin.
 
