@@ -11,7 +11,7 @@
 
 [1]: https://travis-ci.org/TimothyYe/ydict.svg?branch=master
 [2]: https://travis-ci.org/TimothyYe/ydict
-[3]: https://img.shields.io/badge/release-v0.7-brightgreen.svg
+[3]: https://img.shields.io/badge/release-v0.8-brightgreen.svg
 [4]: https://github.com/TimothyYe/ydict/releases
 [5]: https://img.shields.io/dub/l/vibe-d.svg
 [6]: LICENSE
