@@ -14,10 +14,13 @@ import (
 	proxier "golang.org/x/net/proxy"
 )
 
-func query(word string, isMulti bool) {
+func query(words []string, playVoice, isMulti bool) {
 	var url string
 	var doc *goquery.Document
-	isChinese := isChinese(word)
+	queryString := strings.Join(words, " ")
+	//voiceString := strings.Join(words, "+")
+
+	isChinese := isChinese(queryString)
 
 	if isChinese {
 		url = "http://dict.youdao.com/w/eng/%s"
@@ -45,7 +48,7 @@ func query(word string, isMulti bool) {
 		client.Transport = httpTransport
 		httpTransport.Dial = dialer.Dial
 
-		resp, err := client.Get(fmt.Sprintf(url, word))
+		resp, err := client.Get(fmt.Sprintf(url, queryString))
 
 		if err != nil {
 			color.Red("Query failed with err: %s", err.Error())
@@ -55,7 +58,7 @@ func query(word string, isMulti bool) {
 		doc, _ = goquery.NewDocumentFromResponse(resp)
 	} else {
 		var err error
-		doc, err = goquery.NewDocument(fmt.Sprintf(url, word))
+		doc, err = goquery.NewDocument(fmt.Sprintf(url, queryString))
 		if err != nil {
 			log.Fatal(err)
 			os.Exit(1)

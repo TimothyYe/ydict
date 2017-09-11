@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"strings"
 )
 
 var (
@@ -18,6 +17,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	words := strings.Join(os.Args[1:], " ")
-	query(words, len(os.Args[1:]) > 1)
+	words, withVoice := parseArgs(os.Args)
+	//words := strings.Join(os.Args[1:], " ")
+	query(words, withVoice, len(os.Args[1:]) > 1)
 }

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"unicode"
 
 	"github.com/fatih/color"
@@ -40,6 +41,10 @@ func isChinese(str string) bool {
 	return false
 }
 
+func isMacOS() bool {
+	return runtime.GOOS == "darwin"
+}
+
 func getExecutePath() string {
 	ex, err := os.Executable()
 	if err != nil {
@@ -65,4 +70,13 @@ func loadEnv() {
 	}
 
 	proxy = os.Getenv("SOCKS5")
+}
+
+func parseArgs(args []string) ([]string, bool) {
+	//match argument: -v
+	if args[len(args)-1] == "-v" {
+		return args[1 : len(args)-1], true
+	}
+
+	return args[1:], false
 }
