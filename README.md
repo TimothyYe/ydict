@@ -26,6 +26,7 @@ Ydict, another command line dictionary for geeks!
 
 * Chinese -> English
 * English -> Chinese
+* Show hints if word is not found
 
 ## Installation
 
