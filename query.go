@@ -74,6 +74,19 @@ func query(words []string, playVoice, isMulti bool) {
 			color.Green("    %s", s.Find(".search-js").Text())
 		})
 	} else {
+
+		// Check for typos
+		if hint := getHint(doc); hint != nil {
+			color.Blue("\r\n    word '%s' not found, do you mean?", queryString)
+			fmt.Println()
+			for _, guess := range hint {
+				color.Green("    %s", guess[0])
+				color.Magenta("    %s", guess[1])
+			}
+			fmt.Println()
+			return
+		}
+
 		// Find the pronounce
 		if !isMulti {
 			color.Green("\r\n    %s", getPronounce(doc))
@@ -112,6 +125,21 @@ func getPronounce(doc *goquery.Document) string {
 	})
 
 	return pronounce
+}
+
+func getHint(doc *goquery.Document) [][]string {
+	typos := doc.Find(".typo-rel")
+	if typos.Length() == 0 {
+		return nil
+	}
+	result := [][]string{}
+	typos.Each(func(_ int, s *goquery.Selection) {
+		word := strings.TrimSpace(s.Find("a").Text())
+		s.Children().Remove()
+		mean := strings.TrimSpace(s.Text())
+		result = append(result, []string{word, mean})
+	})
+	return result
 }
 
 func getSentences(doc *goquery.Document, isChinese bool) [][]string {
