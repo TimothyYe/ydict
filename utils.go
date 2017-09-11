@@ -28,7 +28,7 @@ https://github.com/TimothyYe/ydict
 
 func displayUsage() {
 	color.Cyan(logo)
-	color.Cyan("Usage: ydict <word to query>")
+	color.Cyan("Usage: ydict <word(s) to query>")
 }
 
 func isChinese(str string) bool {
