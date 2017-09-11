@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 	proxier "golang.org/x/net/proxy"
 )
@@ -22,6 +24,12 @@ func query(word string, isMulti bool) {
 	} else {
 		url = "http://dict.youdao.com/w/%s"
 	}
+
+	//Init spinner
+	s := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
+	s.Prefix = "Querying... "
+	s.Color("green")
+	s.Start()
 
 	//Check proxy
 	if proxy != "" {
@@ -45,7 +53,6 @@ func query(word string, isMulti bool) {
 		}
 
 		doc, _ = goquery.NewDocumentFromResponse(resp)
-
 	} else {
 		var err error
 		doc, err = goquery.NewDocument(fmt.Sprintf(url, word))
@@ -54,6 +61,8 @@ func query(word string, isMulti bool) {
 			os.Exit(1)
 		}
 	}
+
+	s.Stop()
 
 	if isChinese {
 		// Find the result
