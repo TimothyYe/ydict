@@ -49,7 +49,7 @@ Download it from [releases](https://github.com/TimothyYe/ydict/releases), and ex
 ## Usage
 
 ```text
-ydict <word to query>
+ydict <word(s) to query>
 ```
 
 ## SOCKS5 proxy
