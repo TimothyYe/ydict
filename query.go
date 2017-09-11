@@ -12,7 +12,7 @@ import (
 	proxier "golang.org/x/net/proxy"
 )
 
-func query(word string) {
+func query(word string, isMulti bool) {
 	var url string
 	var doc *goquery.Document
 	isChinese := isChinese(word)
@@ -62,6 +62,11 @@ func query(word string) {
 			color.Green("    %s", s.Find(".search-js").Text())
 		})
 	} else {
+		// Find the pronounce
+		if !isMulti {
+			color.Green("\r\n    %s", getPronounce(doc))
+		}
+
 		// Find the result
 		result := doc.Find("div#phrsListTab > div.trans-container > ul").Text()
 		color.Green(result)
@@ -77,6 +82,24 @@ func query(word string) {
 		}
 		fmt.Println()
 	}
+}
+
+func getPronounce(doc *goquery.Document) string {
+	var pronounce string
+	doc.Find("div.baav > span.pronounce").Each(func(i int, s *goquery.Selection) {
+
+		if i == 0 {
+			p := fmt.Sprintf("英: %s    ", s.Find("span.phonetic").Text())
+			pronounce += p
+		}
+
+		if i == 1 {
+			p := fmt.Sprintf("美: %s", s.Find("span.phonetic").Text())
+			pronounce += p
+		}
+	})
+
+	return pronounce
 }
 
 func getSentences(doc *goquery.Document, isChinese bool) [][]string {

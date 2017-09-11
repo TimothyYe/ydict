@@ -19,5 +19,5 @@ func main() {
 	}
 
 	words := strings.Join(os.Args[1:], " ")
-	query(words)
+	query(words, len(os.Args[1:]) > 1)
 }
