@@ -3,6 +3,7 @@ BINARY=ydict
 # Builds the project
 build:
 		go build -o ${BINARY}
+		go test -v
 # Installs our project: copies binaries
 install:
 		go install
