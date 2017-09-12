@@ -18,7 +18,7 @@
 [7]: https://goreportcard.com/badge/github.com/timothyye/ydict
 [8]: https://goreportcard.com/report/github.com/timothyye/ydict
 
-Ydict, 转为命令行极客打造的有道词典!
+Ydict, 专为命令行极客打造的有道词典!
 
 ![](https://raw.githubusercontent.com/TimothyYe/ydict/master/snapshots/ydict.gif)
 
