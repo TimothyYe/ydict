@@ -66,7 +66,7 @@ func query(words []string, withVoice, isMulti bool) {
 
 		doc, _ = goquery.NewDocumentFromResponse(resp)
 
-		if withVoice {
+		if withVoice && isAvailableOS() {
 			if resp, err := client.Get(fmt.Sprintf(voiceURL, voiceString)); err == nil {
 				voiceBody = resp.Body
 			}
@@ -80,7 +80,7 @@ func query(words []string, withVoice, isMulti bool) {
 			os.Exit(1)
 		}
 
-		if withVoice {
+		if withVoice && isAvailableOS() {
 			if resp, err := http.Get(fmt.Sprintf(voiceURL, voiceString)); err == nil {
 				voiceBody = resp.Body
 			}
@@ -130,7 +130,7 @@ func query(words []string, withVoice, isMulti bool) {
 		fmt.Println()
 	}
 
-	if withVoice {
+	if withVoice && isAvailableOS() {
 		playVoice(voiceBody)
 	}
 }

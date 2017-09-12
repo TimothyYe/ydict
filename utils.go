@@ -41,8 +41,8 @@ func isChinese(str string) bool {
 	return false
 }
 
-func isMacOS() bool {
-	return runtime.GOOS == "darwin"
+func isAvailableOS() bool {
+	return runtime.GOOS == "darwin" || runtime.GOOS == "linux"
 }
 
 func getExecutePath() string {
