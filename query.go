@@ -153,7 +153,7 @@ func playVoice(body io.ReadCloser) {
 		fmt.Println(err)
 	}
 
-	cmd := exec.Command("mpg321", tmpfile.Name())
+	cmd := exec.Command("mpg123", tmpfile.Name())
 
 	if err := cmd.Start(); err != nil {
 		fmt.Println(err)
