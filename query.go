@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 	"time"
 
@@ -14,11 +17,17 @@ import (
 	proxier "golang.org/x/net/proxy"
 )
 
-func query(words []string, playVoice, isMulti bool) {
+var (
+	voiceURL = "https://dict.youdao.com/dictvoice?audio=%s&type=2"
+)
+
+func query(words []string, withVoice, isMulti bool) {
 	var url string
 	var doc *goquery.Document
+	var voiceBody io.ReadCloser
+
 	queryString := strings.Join(words, " ")
-	//voiceString := strings.Join(words, "+")
+	voiceString := strings.Join(words, "+")
 
 	isChinese := isChinese(queryString)
 
@@ -56,12 +65,25 @@ func query(words []string, playVoice, isMulti bool) {
 		}
 
 		doc, _ = goquery.NewDocumentFromResponse(resp)
+
+		if withVoice {
+			if resp, err := client.Get(fmt.Sprintf(voiceURL, voiceString)); err == nil {
+				voiceBody = resp.Body
+			}
+		}
 	} else {
 		var err error
 		doc, err = goquery.NewDocument(fmt.Sprintf(url, queryString))
+
 		if err != nil {
 			log.Fatal(err)
 			os.Exit(1)
+		}
+
+		if withVoice {
+			if resp, err := http.Get(fmt.Sprintf(voiceURL, voiceString)); err == nil {
+				voiceBody = resp.Body
+			}
 		}
 	}
 
@@ -106,6 +128,39 @@ func query(words []string, playVoice, isMulti bool) {
 			color.Magenta("    %s", sentence[1])
 		}
 		fmt.Println()
+	}
+
+	if withVoice {
+		playVoice(voiceBody)
+	}
+}
+
+func playVoice(body io.ReadCloser) {
+	tmpfile, err := ioutil.TempFile("", "ydict")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer os.Remove(tmpfile.Name()) // clean up
+
+	data, err := ioutil.ReadAll(body)
+
+	if _, err := tmpfile.Write(data); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := tmpfile.Close(); err != nil {
+		fmt.Println(err)
+	}
+
+	cmd := exec.Command("mpg321", tmpfile.Name())
+
+	if err := cmd.Start(); err != nil {
+		fmt.Println(err)
+	}
+
+	if err := cmd.Wait(); err != nil {
+		fmt.Println(err)
 	}
 }
 
