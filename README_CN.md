@@ -18,20 +18,18 @@
 [7]: https://goreportcard.com/badge/github.com/timothyye/ydict
 [8]: https://goreportcard.com/report/github.com/timothyye/ydict
 
-Ydict, another command line dictionary for geeks!
+Ydict, 转为命令行极客打造的有道词典!
 
 ![](https://raw.githubusercontent.com/TimothyYe/ydict/master/snapshots/ydict.gif)
 
-([中文介绍文档](https://github.com/TimothyYe/ydict/blob/master/README_CN.md))
+## 功能一览
 
-## Features
+* 中文翻译为英文
+* 英文翻译为中文
+* 查询不到单词时，自动显示推荐搜索提示
+* 语音朗读功能，朗读你所查询的单词
 
-* Chinese -> English
-* English -> Chinese
-* Show hints if word is not found
-* Speech
-
-## Installation
+## 安装
 
 #### Homebrew
 
@@ -40,21 +38,21 @@ brew tap timothyye/tap
 brew install timothyye/tap/ydict
 ```
 
-#### Using Go
+#### 使用go get安装
 
 ```bash
 go get github.com/TimothyYe/ydict
 ```
 
-#### Manual Installation
+#### 手动安装
 
-Download it from [releases](https://github.com/TimothyYe/ydict/releases), and extact it to /usr/bin.
+从 [releases](https://github.com/TimothyYe/ydict/releases) 下载最新发布版本, 解压可执行文件到 /usr/bin
 
-## Speech
+## 语音朗读功能
 
-Starting from V0.9, speech feature is available. You need to install mpg123 to enable this feature.
+从V0.9版本开始，提供语音朗读功能. 为开启此功能，你需要先安装mpg123组件。
 
-___NOTICE:___ Currently, speech feature is only available for MacOS/Linux.
+___注意:___ 语音朗读功能当前仅支持操作系统 MacOS/Linux。
 
 #### Mac OS
 
@@ -73,34 +71,34 @@ sudo apt-get install mpg123
 yum install -y mpg123
 ```
 
-## Usage
+## 使用的正确姿势
 
-1. Query
-
-```text
-ydict <word(s) to query>
-```
-
-2. Query with speetch (__Available for MacOS & Linux__)
+1. 仅查询单词
 
 ```text
-ydict <word(s) to query> -v
+ydict <要查询的单词或词组>
 ```
 
-## SOCKS5 proxy
+2. 查询并朗读单词 (__目前仅支持 MacOS 和 Linux__)
 
-Starting from V0.5, you can use SOCKS5 proxy. At the same directory of ydict, just create a ```.env``` file:
+```text
+ydict <要查询的单词或词组> -v
+```
+
+## SOCKS5 代理支持
+
+从版本 V0.5 开始, 支持SOCKS5代理功能. 在ydict的相同目录下，创建 ```.env``` 文件，并填入如下示例内容:
 
 ```text
 SOCKS5=127.0.0.1:7070
 ```
 
-Now all the queries will go through the specified SOCKS5 proxy.
+配置成功后，所有的查询将使用配置指定的SOCKS5代理。
 
-## Help
+## 帮助与更多信息
 
-Just type "ydict" to get help.
+命令行中，输入 "ydict" 获取更多帮助。
   
-## Licence
+## 开源协议
 
 [MIT License](https://github.com/TimothyYe/ydict/blob/master/LICENSE)
