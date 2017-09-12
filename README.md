@@ -11,7 +11,7 @@
 
 [1]: https://travis-ci.org/TimothyYe/ydict.svg?branch=master
 [2]: https://travis-ci.org/TimothyYe/ydict
-[3]: https://img.shields.io/badge/release-v0.8-brightgreen.svg
+[3]: https://img.shields.io/badge/release-v0.9-brightgreen.svg
 [4]: https://github.com/TimothyYe/ydict/releases
 [5]: https://img.shields.io/dub/l/vibe-d.svg
 [6]: LICENSE
@@ -27,6 +27,7 @@ Ydict, another command line dictionary for geeks!
 * Chinese -> English
 * English -> Chinese
 * Show hints if word is not found
+* Speech
 
 ## Installation
 
@@ -47,10 +48,41 @@ go get github.com/TimothyYe/ydict
 
 Download it from [releases](https://github.com/TimothyYe/ydict/releases), and extact it to /usr/bin.
 
+## Speech
+
+Starting from V0.9, speech feature is available. You need to install mpg123 to enable this feature.
+
+___NOTICE:___ Currently, speech feature is only available for MacOS/Linux.
+
+#### Mac OS
+
+```bash
+brew install mpg123
+```
+#### Ubuntu
+
+```bash
+sudo apt-get install mpg123
+```
+
+#### CentOS
+
+```bash
+yum install -y mpg123
+```
+
 ## Usage
+
+1. Query
 
 ```text
 ydict <word(s) to query>
+```
+
+2. Query with speetch (__Available for MacOS & Linux__)
+
+```text
+ydict <word(s) to query> -v
 ```
 
 ## SOCKS5 proxy
