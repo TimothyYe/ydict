@@ -18,7 +18,7 @@
 [7]: https://goreportcard.com/badge/github.com/timothyye/ydict
 [8]: https://goreportcard.com/report/github.com/timothyye/ydict
 
-Ydict, another command line dictionary for geeks!
+Ydict, another command-line youdao dictionary for geeks!
 
 ![](https://raw.githubusercontent.com/TimothyYe/ydict/master/snapshots/ydict.gif)
 
