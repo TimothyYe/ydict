@@ -18,6 +18,5 @@ func main() {
 	}
 
 	words, withVoice := parseArgs(os.Args)
-	//words := strings.Join(os.Args[1:], " ")
 	query(words, withVoice, len(os.Args[1:]) > 1)
 }
