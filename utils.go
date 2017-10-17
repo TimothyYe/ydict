@@ -21,7 +21,7 @@ const (
    ██║   ██████╔╝██║╚██████╗   ██║   
    ╚═╝   ╚═════╝ ╚═╝ ╚═════╝   ╚═╝   
 
-YDict V0.9
+YDict V1.0
 https://github.com/TimothyYe/ydict
 
 `
