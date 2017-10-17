@@ -21,7 +21,7 @@ var (
 	voiceURL = "https://dict.youdao.com/dictvoice?audio=%s&type=2"
 )
 
-func query(words []string, withVoice, isMulti bool) {
+func query(words []string, withVoice, withMore, isMulti bool) {
 	var url string
 	var doc *goquery.Document
 	var voiceBody io.ReadCloser
@@ -120,11 +120,11 @@ func query(words []string, withVoice, isMulti bool) {
 	}
 
 	// Show examples
-	sentences := getSentences(doc, isChinese)
+	sentences := getSentences(words, doc, isChinese, withMore)
 	if len(sentences) > 0 {
 		fmt.Println()
-		for _, sentence := range sentences {
-			color.Green("    %s", sentence[0])
+		for i, sentence := range sentences {
+			color.Green(" %2d.%s", i, sentence[0])
 			color.Magenta("    %s", sentence[1])
 		}
 		fmt.Println()
@@ -197,8 +197,16 @@ func getHint(doc *goquery.Document) [][]string {
 	return result
 }
 
-func getSentences(doc *goquery.Document, isChinese bool) [][]string {
+func getSentences(words []string, doc *goquery.Document, isChinese, withMore bool) [][]string {
 	result := [][]string{}
+	if withMore {
+		url := fmt.Sprintf("http://dict.youdao.com/example/blng/eng/%s", strings.Join(words, "_"))
+		var err error
+		doc, err = goquery.NewDocument(url)
+		if err != nil {
+			return result
+		}
+	}
 	doc.Find("#bilingual ul li").Each(func(_ int, s *goquery.Selection) {
 		r := []string{}
 		s.Children().Each(func(ii int, ss *goquery.Selection) {
@@ -209,8 +217,8 @@ func getSentences(doc *goquery.Document, isChinese bool) [][]string {
 			var sentence string
 			ss.Children().Each(func(iii int, sss *goquery.Selection) {
 				if text := strings.TrimSpace(sss.Text()); text != "" {
-					addSpace := (ii == 1 && isChinese) || (ii == 0 && !isChinese)
-					if addSpace && iii != 0 && text != "." {
+					addSpace := (ii == 1 && isChinese) || (ii == 0 && !isChinese) && iii != 0 && text != "."
+					if addSpace {
 						text = " " + text
 					}
 					sentence += text
