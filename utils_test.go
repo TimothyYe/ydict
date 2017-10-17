@@ -35,16 +35,31 @@ func TestParseArgs(t *testing.T) {
 
 	// Only pass t into top-level Convey calls
 	Convey("Init args arrays: withVoice & withOutVoice", t, func() {
+		withoutAll := []string{"aa", "bb", "cc"}
+		withAll := []string{"aa", "bb", "-v", "-m"}
+
 		withVoice := []string{"aa", "bb", "-v"}
-		withOutVoice := []string{"aa", "bb", "cc"}
+		withMore := []string{"aa", "bb", "-m"}
 
 		Convey("Call parse func", func() {
-			_, ret := parseArgs(withVoice)
-			_, ret2 := parseArgs(withOutVoice)
+			_, ret1, ret2 := parseArgs(withoutAll)
+			_, ret3, ret4 := parseArgs(withAll)
+
+			_, ret5, ret6 := parseArgs(withVoice)
+			_, ret7, ret8 := parseArgs(withMore)
 
 			Convey("result should be: true & false", func() {
-				So(ret, ShouldEqual, true)
+				So(ret1, ShouldEqual, false)
 				So(ret2, ShouldEqual, false)
+
+				So(ret3, ShouldEqual, true)
+				So(ret4, ShouldEqual, true)
+
+				So(ret5, ShouldEqual, true)
+				So(ret6, ShouldEqual, false)
+
+				So(ret7, ShouldEqual, false)
+				So(ret8, ShouldEqual, true)
 			})
 		})
 	})

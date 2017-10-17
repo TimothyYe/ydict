@@ -74,11 +74,20 @@ func loadEnv() {
 	proxy = os.Getenv("SOCKS5")
 }
 
-func parseArgs(args []string) ([]string, bool) {
-	//match argument: -v
-	if args[len(args)-1] == "-v" {
-		return args[1 : len(args)-1], true
+func parseArgs(args []string) ([]string, bool, bool) {
+	//match argument: -v or -m
+	n := 0
+	var withVoice, withMore bool
+	for i := len(args) - 1; i > 0; i-- {
+		if args[i] == "-v" {
+			withVoice = true
+			n++
+		} else if args[i] == "-m" {
+			withMore = true
+			n++
+		} else {
+			break
+		}
 	}
-
-	return args[1:], false
+	return args[1 : len(args)-n], withVoice, withMore
 }
