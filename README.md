@@ -30,6 +30,7 @@ Ydict, another command-line youdao dictionary for geeks!
 * English -> Chinese
 * Show hints if word is not found
 * Speech
+* Show example sentences
 
 ## Installation
 
