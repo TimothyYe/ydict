@@ -124,7 +124,7 @@ func query(words []string, withVoice, withMore, isMulti bool) {
 	if len(sentences) > 0 {
 		fmt.Println()
 		for i, sentence := range sentences {
-			color.Green(" %2d.%s", i, sentence[0])
+			color.Green(" %2d.%s", i+1, sentence[0])
 			color.Magenta("    %s", sentence[1])
 		}
 		fmt.Println()
