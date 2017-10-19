@@ -12,8 +12,10 @@ import (
 	"github.com/joho/godotenv"
 )
 
-const (
-	logo = `
+var (
+	//Version of ydict
+	Version = "0.1"
+	logo    = `
 ██╗   ██╗██████╗ ██╗ ██████╗████████╗
 ╚██╗ ██╔╝██╔══██╗██║██╔════╝╚══██╔══╝
  ╚████╔╝ ██║  ██║██║██║        ██║   
@@ -21,17 +23,18 @@ const (
    ██║   ██████╔╝██║╚██████╗   ██║   
    ╚═╝   ╚═════╝ ╚═╝ ╚═════╝   ╚═╝   
 
-YDict V1.0
+YDict V%s
 https://github.com/TimothyYe/ydict
 
 `
 )
 
 func displayUsage() {
-	color.Cyan(logo)
+	color.Cyan(logo, Version)
 	color.Cyan("Usage:")
 	color.Cyan("ydict <word(s) to query>        Query the word(s)")
 	color.Cyan("ydict <word(s) to query> -v     Query with speech")
+	color.Cyan("ydict <word(s) to query> -m     Query with more example sentences")
 }
 
 func isChinese(str string) bool {
