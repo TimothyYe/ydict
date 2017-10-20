@@ -144,6 +144,9 @@ func playVoice(body io.ReadCloser) {
 	defer os.Remove(tmpfile.Name()) // clean up
 
 	data, err := ioutil.ReadAll(body)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if _, err := tmpfile.Write(data); err != nil {
 		log.Fatal(err)
