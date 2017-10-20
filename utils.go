@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"unicode"
 
 	"github.com/fatih/color"
@@ -79,18 +80,34 @@ func loadEnv() {
 
 func parseArgs(args []string) ([]string, bool, bool) {
 	//match argument: -v or -m
-	n := 0
 	var withVoice, withMore bool
-	for i := len(args) - 1; i > 0; i-- {
-		if args[i] == "-v" {
-			withVoice = true
-			n++
-		} else if args[i] == "-m" {
-			withMore = true
-			n++
-		} else {
-			break
+	parameterStartIndex := findParamStartIndex(args)
+	paramArray := args[parameterStartIndex:]
+	if elementInStringArray(paramArray, "-m") {
+		withMore = true
+	}
+
+	if elementInStringArray(paramArray, "-v") {
+		withVoice = true
+	}
+	return args[1:parameterStartIndex], withVoice, withMore
+}
+
+func findParamStartIndex(args []string) int {
+	// iter the args array, if an element is -m or -v, then  all of the latter elements must be parameter instead of words.
+	for index, word := range args {
+		if strings.HasPrefix(word, "-") && len(word) == 2 {
+			return index
 		}
 	}
-	return args[1 : len(args)-n], withVoice, withMore
+	return len(args)
+}
+
+func elementInStringArray(stringArray []string, element string) bool {
+	for _, word := range stringArray {
+		if word == element {
+			return true
+		}
+	}
+	return false
 }
