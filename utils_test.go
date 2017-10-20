@@ -22,15 +22,6 @@ func TestIsChinese(t *testing.T) {
 	})
 }
 
-//func parseArgs(args []string) ([]string, bool) {
-////match argument: -v
-//if args[len(args)-1] == "-v" {
-//return args[1 : len(args)-1], true
-//}
-
-//return args[1:], false
-//}
-
 func TestParseArgs(t *testing.T) {
 
 	// Only pass t into top-level Convey calls
