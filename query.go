@@ -92,8 +92,17 @@ func query(words []string, withVoice, withMore, isMulti bool) {
 	if isChinese {
 		// Find the result
 		fmt.Println()
-		doc.Find(".trans-container > ul > p > span.contentTitle").Each(func(i int, s *goquery.Selection) {
-			color.Green("    %s", s.Find(".search-js").Text())
+		doc.Find(".trans-container > ul > p").Each(func(i int, s *goquery.Selection) {
+			partOfSpeech := s.Children().Not(".contentTitle").Text()
+			if partOfSpeech != "" {
+				fmt.Printf("%14s ", color.MagentaString(partOfSpeech))
+			}
+
+			meanings := []string{}
+			s.Find(".contentTitle > .search-js").Each(func(ii int, ss *goquery.Selection) {
+				meanings = append(meanings, ss.Text())
+			})
+			fmt.Printf("%s\n", color.GreenString(strings.Join(meanings, "; ")))
 		})
 	} else {
 
