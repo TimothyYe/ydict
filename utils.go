@@ -36,6 +36,7 @@ func displayUsage() {
 	color.Cyan("ydict <word(s) to query>        Query the word(s)")
 	color.Cyan("ydict <word(s) to query> -v     Query with speech")
 	color.Cyan("ydict <word(s) to query> -m     Query with more example sentences")
+	color.Cyan("ydict -h                        For help")
 }
 
 func isChinese(str string) bool {

@@ -17,6 +17,11 @@ func main() {
 		os.Exit(0)
 	}
 
+	if len(os.Args) == 2 && os.Args[1] == "-h" {
+		displayUsage()
+		os.Exit(0)
+	}
+
 	words, withVoice, withMore := parseArgs(os.Args)
 	query(words, withVoice, withMore, len(words) > 1)
 }
