@@ -5,3 +5,7 @@ go:
 install:
  - go get -v
  - go get -v github.com/smartystreets/goconvey
+ - go get -u github.com/alecthomas/gometalinter
+script:
+ - gometalinter --install
+ - gometalinter --config=./gometalinter.json --vendor ./...

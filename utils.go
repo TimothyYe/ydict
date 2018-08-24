@@ -95,7 +95,8 @@ func parseArgs(args []string) ([]string, bool, bool) {
 }
 
 func findParamStartIndex(args []string) int {
-	// iter the args array, if an element is -m or -v, then  all of the latter elements must be parameter instead of words.
+	// iter the args array, if an element is -m or -v,
+	// then all of the latter elements must be parameter instead of words.
 	for index, word := range args {
 		if strings.HasPrefix(word, "-") && len(word) == 2 {
 			return index
