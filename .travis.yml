@@ -2,7 +2,7 @@ language: go
 go: 
  - 1.12
 install:
- - go mod download
+ - go get -v
  - go get -v github.com/smartystreets/goconvey/convey
  - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.15.0
 script:
