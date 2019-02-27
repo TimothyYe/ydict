@@ -40,7 +40,10 @@ func query(words []string, withVoice, withMore, isMulti bool) {
 	//Init spinner
 	s := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
 	s.Prefix = "Querying... "
-	s.Color("green")
+	if err := s.Color("green"); err != nil {
+		color.Red("Failed to set color for spinner")
+		os.Exit(1)
+	}
 	s.Start()
 
 	//Check proxy
