@@ -27,30 +27,28 @@ func TestParseArgs(t *testing.T) {
 	// Only pass t into top-level Convey calls
 	Convey("Init args arrays: withVoice & withOutVoice", t, func() {
 		withoutAll := []string{"aa", "bb", "cc"}
-		withAll := []string{"aa", "bb", "-v", "-m"}
-
-		withVoice := []string{"aa", "bb", "-v"}
-		withMore := []string{"aa", "bb", "-m"}
+		withAll := []string{"-v", "-m", "-q", "aa", "bb"}
 
 		Convey("Call parse func", func() {
-			_, ret1, ret2 := parseArgs(withoutAll)
-			_, ret3, ret4 := parseArgs(withAll)
-
-			_, ret5, ret6 := parseArgs(withVoice)
-			_, ret7, ret8 := parseArgs(withMore)
+			words01, ret01, ret02, ret03 := parseArgs(withoutAll)
+			words11, ret11, ret12, ret13 := parseArgs(withAll)
 
 			Convey("result should be: true & false", func() {
-				So(ret1, ShouldEqual, false)
-				So(ret2, ShouldEqual, false)
+				So(words01, ShouldContain, "aa")
+				So(words01, ShouldContain, "bb")
+				So(words01, ShouldContain, "cc")
+				So(ret01, ShouldEqual, false)
+				So(ret02, ShouldEqual, false)
+				So(ret03, ShouldEqual, false)
 
-				So(ret3, ShouldEqual, true)
-				So(ret4, ShouldEqual, true)
-
-				So(ret5, ShouldEqual, true)
-				So(ret6, ShouldEqual, false)
-
-				So(ret7, ShouldEqual, false)
-				So(ret8, ShouldEqual, true)
+				So(words11, ShouldContain, "aa")
+				So(words11, ShouldContain, "bb")
+				So(words11, ShouldNotContain, "-v")
+				So(words11, ShouldNotContain, "-m")
+				So(words11, ShouldNotContain, "-q")
+				So(ret11, ShouldEqual, true)
+				So(ret12, ShouldEqual, true)
+				So(ret13, ShouldEqual, true)
 			})
 		})
 	})

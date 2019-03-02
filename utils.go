@@ -34,8 +34,9 @@ func displayUsage() {
 	color.Cyan(logo, Version)
 	color.Cyan("Usage:")
 	color.Cyan("ydict <word(s) to query>        Query the word(s)")
-	color.Cyan("ydict <word(s) to query> -v     Query with speech")
-	color.Cyan("ydict <word(s) to query> -m     Query with more example sentences")
+	color.Cyan("ydict -v <word(s) to query>     Query with speech")
+	color.Cyan("ydict -m <word(s) to query>     Query with more example sentences")
+	color.Cyan("ydict -q <word(s) to query>     Query with quiet mode, don't show spinner")
 	color.Cyan("ydict -h                        For help")
 }
 
@@ -79,11 +80,11 @@ func loadEnv() {
 	proxy = os.Getenv("SOCKS5")
 }
 
-func parseArgs(args []string) ([]string, bool, bool) {
-	//match argument: -v or -m
-	var withVoice, withMore bool
-	parameterStartIndex := findParamStartIndex(args)
-	paramArray := args[parameterStartIndex:]
+func parseArgs(args []string) ([]string, bool, bool, bool) {
+	//match argument: -v or -m or -q
+	var withVoice, withMore, isQuiet bool
+	wordStartIndex := findWordStartIndex(args)
+	paramArray := args[:wordStartIndex]
 	if elementInStringArray(paramArray, "-m") {
 		withMore = true
 	}
@@ -91,14 +92,19 @@ func parseArgs(args []string) ([]string, bool, bool) {
 	if elementInStringArray(paramArray, "-v") {
 		withVoice = true
 	}
-	return args[1:parameterStartIndex], withVoice, withMore
+
+	if elementInStringArray(paramArray, "-q") {
+		isQuiet = true
+	}
+
+	return args[wordStartIndex:], withVoice, withMore, isQuiet
 }
 
-func findParamStartIndex(args []string) int {
-	// iter the args array, if an element is -m or -v,
+func findWordStartIndex(args []string) int {
+	// iter the args array, if an element is -m or -v or -q,
 	// then all of the latter elements must be parameter instead of words.
 	for index, word := range args {
-		if strings.HasPrefix(word, "-") && len(word) == 2 {
+		if !strings.HasPrefix(word, "-") {
 			return index
 		}
 	}
