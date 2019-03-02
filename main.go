@@ -22,6 +22,6 @@ func main() {
 		os.Exit(0)
 	}
 
-	words, withVoice, withMore := parseArgs(os.Args)
-	query(words, withVoice, withMore, len(words) > 1)
+	words, withVoice, withMore, isQuiet := parseArgs(os.Args[1:])
+	query(words, withVoice, withMore, isQuiet, len(words) > 1)
 }

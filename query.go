@@ -21,7 +21,7 @@ var (
 	voiceURL = "https://dict.youdao.com/dictvoice?audio=%s&type=2"
 )
 
-func query(words []string, withVoice, withMore, isMulti bool) {
+func query(words []string, withVoice, withMore, isQuiet, isMulti bool) {
 	var url string
 	var doc *goquery.Document
 	var voiceBody io.ReadCloser
@@ -38,13 +38,16 @@ func query(words []string, withVoice, withMore, isMulti bool) {
 	}
 
 	//Init spinner
-	s := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
-	s.Prefix = "Querying... "
-	if err := s.Color("green"); err != nil {
-		color.Red("Failed to set color for spinner")
-		os.Exit(1)
+	var s *spinner.Spinner
+	if !isQuiet {
+		s = spinner.New(spinner.CharSets[35], 100*time.Millisecond)
+		s.Prefix = "Querying... "
+		if err := s.Color("green"); err != nil {
+			color.Red("Failed to set color for spinner")
+			os.Exit(1)
+		}
+		s.Start()
 	}
-	s.Start()
 
 	//Check proxy
 	if proxy != "" {
@@ -90,7 +93,9 @@ func query(words []string, withVoice, withMore, isMulti bool) {
 		}
 	}
 
-	s.Stop()
+	if !isQuiet {
+		s.Stop()
+	}
 
 	if isChinese {
 		// Find the result
