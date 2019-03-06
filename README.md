@@ -31,6 +31,7 @@ Ydict, another command-line youdao dictionary for geeks!
 * Show hints if word is not found
 * Speech
 * Show example sentences
+* Vim support
 
 ## Installation
 
@@ -50,6 +51,10 @@ go get github.com/TimothyYe/ydict
 #### Manual Installation
 
 Download it from [releases](https://github.com/TimothyYe/ydict/releases), and extact it to /usr/bin.
+
+#### Integrate with Vim
+
+To query words from Vim, you need another Vim plugin: [vim-ydict](https://github.com/TimothyYe/vim-ydict)
 
 ## Speech
 

@@ -48,6 +48,10 @@ go get github.com/TimothyYe/ydict
 
 从 [releases](https://github.com/TimothyYe/ydict/releases) 下载最新发布版本, 解压可执行文件到 /usr/bin
 
+#### Vim集成插件
+
+使用配套Vim插件，可以直接在Vim中通过ydict查询单词。安装与配置，请移步: [vim-ydict](https://github.com/TimothyYe/vim-ydict)
+
 ## 语音朗读功能
 
 从V0.9版本开始，提供语音朗读功能。为开启此功能，你需要先安装mpg123组件。
