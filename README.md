@@ -87,7 +87,7 @@ yum install -y mpg123
 ydict <word(s) to query>
 ```
 
-2. Query with speetch (__Available for MacOS & Linux__)
+2. Query with speech (__Available for MacOS & Linux__)
 
 ```text
 ydict <word(s) to query> -v
