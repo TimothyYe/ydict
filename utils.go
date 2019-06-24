@@ -31,12 +31,15 @@ https://github.com/TimothyYe/ydict
 )
 
 func displayUsage() {
+	logo = ""
 	color.Cyan(logo, Version)
 	color.Cyan("Usage:")
 	color.Cyan("ydict <word(s) to query>        Query the word(s)")
 	color.Cyan("ydict -v <word(s) to query>     Query with speech")
 	color.Cyan("ydict -m <word(s) to query>     Query with more example sentences")
 	color.Cyan("ydict -q <word(s) to query>     Query with quiet mode, don't show spinner")
+	color.Cyan("ydict -c <word(s) to query>     Query with local cache")
+	color.Cyan("ydict -clear                    Clear local cache")
 	color.Cyan("ydict -h                        For help")
 }
 
@@ -50,7 +53,15 @@ func isChinese(str string) bool {
 }
 
 func isAvailableOS() bool {
-	return runtime.GOOS == "darwin" || runtime.GOOS == "linux"
+	switch runtime.GOOS {
+	case "android":
+		return true
+	case "darwin":
+		return true
+	case "linux":
+		return true
+	}
+	return false
 }
 
 func getExecutePath() string {
@@ -80,24 +91,36 @@ func loadEnv() {
 	proxy = os.Getenv("SOCKS5")
 }
 
-func parseArgs(args []string) ([]string, bool, bool, bool) {
+func parseArgs(args []string) (
+	words []string,
+	withVoice int,
+	withMore bool,
+	isQuiet bool,
+	withCache bool,
+	clearCache bool,
+) {
 	//match argument: -v or -m or -q
-	var withVoice, withMore, isQuiet bool
 	wordStartIndex := findWordStartIndex(args)
 	paramArray := args[:wordStartIndex]
 	if elementInStringArray(paramArray, "-m") {
 		withMore = true
 	}
 
-	if elementInStringArray(paramArray, "-v") {
-		withVoice = true
-	}
+	withVoice = countInStringArray(paramArray, "-v")
 
 	if elementInStringArray(paramArray, "-q") {
 		isQuiet = true
 	}
 
-	return args[wordStartIndex:], withVoice, withMore, isQuiet
+	if elementInStringArray(paramArray, "-c") {
+		withCache = true
+	}
+
+	if elementInStringArray(paramArray, "-clear") {
+		clearCache = true
+	}
+
+	return args[wordStartIndex:], withVoice, withMore, isQuiet, withCache, clearCache
 }
 
 func findWordStartIndex(args []string) int {
@@ -118,4 +141,14 @@ func elementInStringArray(stringArray []string, element string) bool {
 		}
 	}
 	return false
+}
+
+func countInStringArray(stringArray []string, element string) int {
+	count := 0
+	for _, word := range stringArray {
+		if word == element {
+			count++
+		}
+	}
+	return count
 }

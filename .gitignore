@@ -17,3 +17,7 @@
 ydict
 .DS_Store
 .env
+
+# vim swap file
+*.swp
+
