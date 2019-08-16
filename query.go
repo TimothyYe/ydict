@@ -32,9 +32,9 @@ func query(words []string, withVoice, withMore, isQuiet, isMulti bool) {
 	isChinese := isChinese(queryString)
 
 	if isChinese {
-		url = "http://dict.youdao.com/w/eng/%s"
+		url = "https://dict.youdao.com/w/eng/%s"
 	} else {
-		url = "http://dict.youdao.com/w/%s"
+		url = "https://dict.youdao.com/w/%s"
 	}
 
 	//Init spinner
@@ -70,7 +70,7 @@ func query(words []string, withVoice, withMore, isQuiet, isMulti bool) {
 			os.Exit(1)
 		}
 
-		doc, _ = goquery.NewDocumentFromResponse(resp)
+		doc, _ = goquery.NewDocumentFromReader(resp.Body)
 
 		if withVoice && isAvailableOS() {
 			if resp, err := client.Get(fmt.Sprintf(voiceURL, voiceString)); err == nil {
@@ -78,12 +78,11 @@ func query(words []string, withVoice, withMore, isQuiet, isMulti bool) {
 			}
 		}
 	} else {
-		var err error
-		doc, err = goquery.NewDocument(fmt.Sprintf(url, queryString))
-
-		if err != nil {
-			log.Fatal(err)
+		if resp, err := http.Get(fmt.Sprintf(url, queryString)); err != nil {
+			color.Red("Query failed with err: %s", err.Error())
 			os.Exit(1)
+		} else {
+			doc, _ = goquery.NewDocumentFromReader(resp.Body)
 		}
 
 		if withVoice && isAvailableOS() {
@@ -113,7 +112,6 @@ func query(words []string, withVoice, withMore, isQuiet, isMulti bool) {
 			fmt.Printf("%s\n", color.GreenString(strings.Join(meanings, "; ")))
 		})
 	} else {
-
 		// Check for typos
 		if hint := getHint(doc); hint != nil {
 			color.Blue("\r\n    word '%s' not found, do you mean?", queryString)
@@ -221,12 +219,15 @@ func getSentences(words []string, doc *goquery.Document, isChinese, withMore boo
 	result := [][]string{}
 	if withMore {
 		url := fmt.Sprintf("http://dict.youdao.com/example/blng/eng/%s", strings.Join(words, "_"))
-		var err error
-		doc, err = goquery.NewDocument(url)
-		if err != nil {
-			return result
+
+		if resp, err := http.Get(url); err != nil {
+			color.Red("Query failed with err: %s", err.Error())
+			os.Exit(1)
+		} else {
+			doc, _ = goquery.NewDocumentFromReader(resp.Body)
 		}
 	}
+
 	doc.Find("#bilingual ul li").Each(func(_ int, s *goquery.Selection) {
 		r := []string{}
 		s.Children().Each(func(ii int, ss *goquery.Selection) {
