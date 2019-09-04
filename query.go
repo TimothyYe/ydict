@@ -75,14 +75,16 @@ func (this queryParam) DoQuery() {
 
 	ret.Print("", this.WithVoice)
 
-	var err error = nil
 	if this.WithCache {
-		err = ret.SaveLocalDB(dbCache)
+		err := ret.SaveLocalDB(dbCache)
+		if nil != err {
+			color.Red("Some Thing Wrong! Cause: %s", err)
+		}
 	} else {
-		err = ret.RemoveAudioFile()
-	}
-	if nil != err {
-		color.Red("Some Thing Wrong! Cause: %s", err)
+		err := ret.RemoveAudioFile()
+		if nil != err {
+			color.Red("Some Thing Wrong! Cause: %s", err)
+		}
 	}
 }
 

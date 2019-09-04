@@ -134,15 +134,13 @@ func (this dictResult) Print(fromTag string, playCount int) {
 	}
 }
 
-func ClearCahceFiles() error {
+func ClearCahceFiles() {
 	tmpDir := getDictDir()
 	err := os.RemoveAll(tmpDir)
 	if nil != err && !os.IsNotExist(err) {
 		color.Red("ClearCacheFile Fail! Cause: %s", err.Error())
-		return exterror.New(err)
 	}
 	color.Green("Clear Success! CacheDir: %s", tmpDir)
-	return nil
 }
 
 func getDictDir() string {
