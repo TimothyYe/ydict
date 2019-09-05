@@ -3,43 +3,38 @@ package main
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
-	"os/exec"
 	"strings"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
+	"github.com/syndtr/goleveldb/leveldb"
 	proxier "golang.org/x/net/proxy"
 )
 
-var (
-	voiceURL = "https://dict.youdao.com/dictvoice?audio=%s&type=2"
-)
+type queryParam struct {
+	Words      []string
+	WordString string
 
-func query(words []string, withVoice, withMore, isQuiet, isMulti bool) {
-	var url string
-	var doc *goquery.Document
-	var voiceBody io.ReadCloser
+	IsQuiet   bool
+	IsChinese bool
+	IsMulti   bool
+	WithMore  bool
+	WithCache bool
+	WithVoice int
+}
 
-	queryString := strings.Join(words, " ")
-	voiceString := strings.Join(words, "+")
-
-	isChinese := isChinese(queryString)
-
-	if isChinese {
-		url = "https://dict.youdao.com/w/eng/%s"
-	} else {
-		url = "https://dict.youdao.com/w/%s"
+func (this queryParam) DoQuery() {
+	if len(this.WordString) == 0 {
+		return
 	}
 
 	//Init spinner
 	var s *spinner.Spinner
-	if !isQuiet {
+	if !this.IsQuiet {
 		s = spinner.New(spinner.CharSets[35], 100*time.Millisecond)
 		s.Prefix = "Querying... "
 		if err := s.Color("green"); err != nil {
@@ -49,8 +44,75 @@ func query(words []string, withVoice, withMore, isQuiet, isMulti bool) {
 		s.Start()
 	}
 
-	//Check proxy
+	var dbCache *leveldb.DB = nil
+	if this.WithCache {
+		if ldb, err := OpenLocalDB(); nil != err {
+			color.Red("OpenLocalDb Fail! Cause: %s", err)
+		} else {
+			dbCache = ldb
+		}
+		if nil != dbCache {
+			defer dbCache.Close()
+			key := this.WordString
+			ret, err := QueryLocalDB(key, dbCache)
+			if nil != err {
+				color.Red("QueryLocalDB Fail! Cause: %s", err)
+			}
+			if nil != ret {
+				ret.Print("cache", this.WithVoice)
+				return
+			}
+		}
+	}
+
+	doc, docMore, audioFilePath := this.ReqWeb()
+	if !this.IsQuiet {
+		s.Stop()
+	}
+
+	ret := this.ParseWeb(doc, docMore)
+	ret.AudioFilePath = audioFilePath
+
+	ret.Print("", this.WithVoice)
+
+	if this.WithCache {
+		err := ret.SaveLocalDB(dbCache)
+		if nil != err {
+			color.Red("Some Thing Wrong! Cause: %s", err)
+		}
+	} else {
+		err := ret.RemoveAudioFile()
+		if nil != err {
+			color.Red("Some Thing Wrong! Cause: %s", err)
+		}
+	}
+}
+
+func (this queryParam) ReqWeb() (
+	doc *goquery.Document,
+	docMore *goquery.Document,
+	audioFilePath string,
+) {
+	var voiceBody io.ReadCloser
+
+	urlMore := "http://dict.youdao.com/example/blng/eng/%s"
+	urlVoice := "https://dict.youdao.com/dictvoice?audio=%s&type=2"
+	urlQuery := ""
+	if this.IsChinese {
+		urlQuery = "https://dict.youdao.com/w/eng/%s"
+	} else {
+		urlQuery = "https://dict.youdao.com/w/%s"
+	}
+
+	queryString := strings.Join(this.Words, " ")
+	voiceString := strings.Join(this.Words, "+")
+	moreString := strings.Join(this.Words, "_")
+	queryURL := fmt.Sprintf(urlQuery, queryString)
+	voiceURL := fmt.Sprintf(urlVoice, voiceString)
+	moreURL := fmt.Sprintf(urlMore, moreString)
+
 	if proxy != "" {
+
 		client := &http.Client{}
 		dialer, err := proxier.SOCKS5("tcp", proxy, nil, proxier.Direct)
 
@@ -63,123 +125,123 @@ func query(words []string, withVoice, withMore, isQuiet, isMulti bool) {
 		client.Transport = httpTransport
 		httpTransport.Dial = dialer.Dial
 
-		resp, err := client.Get(fmt.Sprintf(url, queryString))
-
+		resp, err := client.Get(queryURL)
 		if err != nil {
 			color.Red("Query failed with err: %s", err.Error())
 			os.Exit(1)
 		}
-
 		doc, _ = goquery.NewDocumentFromReader(resp.Body)
 
-		if withVoice && isAvailableOS() {
-			if resp, err := client.Get(fmt.Sprintf(voiceURL, voiceString)); err == nil {
+		if this.WithVoice > 0 {
+			if resp, err := client.Get(voiceURL); err == nil {
 				voiceBody = resp.Body
+				audioFilePath, err = SaveVoiceFile(this.WordString, voiceBody)
+				if nil != err {
+					color.Red("SaveVoiceFile failed with err: %s", err.Error())
+				}
 			}
 		}
+
 	} else {
-		if resp, err := http.Get(fmt.Sprintf(url, queryString)); err != nil {
+
+		resp, err := http.Get(queryURL)
+		if err != nil {
+			color.Red("Query failed with err: %s", err.Error())
+			os.Exit(1)
+		}
+		doc, _ = goquery.NewDocumentFromReader(resp.Body)
+
+		if this.WithVoice > 0 {
+			if resp, err := http.Get(voiceURL); err == nil {
+				voiceBody = resp.Body
+				audioFilePath, err = SaveVoiceFile(this.WordString, voiceBody)
+				if nil != err {
+					color.Red("SaveVoiceFile failed with err: %s", err.Error())
+				}
+			}
+		}
+
+	}
+
+	if this.WithMore {
+		if resp, err := http.Get(moreURL); err != nil {
 			color.Red("Query failed with err: %s", err.Error())
 			os.Exit(1)
 		} else {
-			doc, _ = goquery.NewDocumentFromReader(resp.Body)
-		}
-
-		if withVoice && isAvailableOS() {
-			if resp, err := http.Get(fmt.Sprintf(voiceURL, voiceString)); err == nil {
-				voiceBody = resp.Body
-			}
+			docMore, _ = goquery.NewDocumentFromReader(resp.Body)
 		}
 	}
 
-	if !isQuiet {
-		s.Stop()
-	}
+	return doc, docMore, audioFilePath
+}
 
-	if isChinese {
+func (this queryParam) ParseWeb(doc, docMore *goquery.Document) dictResult {
+	ret := dictResult{}
+	ret.WordString = this.WordString
+	if this.IsChinese {
 		// Find the result
-		fmt.Println()
 		doc.Find(".trans-container > ul > p").Each(func(i int, s *goquery.Selection) {
-			partOfSpeech := s.Children().Not(".contentTitle").Text()
-			if partOfSpeech != "" {
-				fmt.Printf("%14s ", color.MagentaString(partOfSpeech))
-			}
+			ret.PartOfSpeech = s.Children().Not(".contentTitle").Text()
 
 			meanings := []string{}
 			s.Find(".contentTitle > .search-js").Each(func(ii int, ss *goquery.Selection) {
 				meanings = append(meanings, ss.Text())
 			})
-			fmt.Printf("%s\n", color.GreenString(strings.Join(meanings, "; ")))
+			ret.Meanings = meanings
 		})
 	} else {
 		// Check for typos
 		if hint := getHint(doc); hint != nil {
-			color.Blue("\r\n    word '%s' not found, do you mean?", queryString)
-			fmt.Println()
-			for _, guess := range hint {
-				color.Green("    %s", guess[0])
-				color.Magenta("    %s", guess[1])
-			}
-			fmt.Println()
-			return
+			ret.Hints = hint
+			return ret
 		}
 
 		// Find the pronounce
-		if !isMulti {
-			color.Green("\r\n    %s", getPronounce(doc))
+		if !this.IsMulti {
+			ret.Pronounce = getPronounce(doc)
 		}
 
 		// Find the result
-		result := doc.Find("div#phrsListTab > div.trans-container > ul").Text()
-		color.Green(result)
+		ret.Result = doc.Find("div#phrsListTab > div.trans-container > ul").Text()
 	}
 
 	// Show examples
-	sentences := getSentences(words, doc, isChinese, withMore)
-	if len(sentences) > 0 {
-		fmt.Println()
-		for i, sentence := range sentences {
-			color.Green(" %2d.%s", i+1, sentence[0])
-			color.Magenta("    %s", sentence[1])
-		}
-		fmt.Println()
+	if nil != docMore {
+		ret.Sentences = this.getSentences(docMore)
+	} else {
+		ret.Sentences = this.getSentences(doc)
 	}
 
-	if withVoice && isAvailableOS() {
-		playVoice(voiceBody)
-	}
+	return ret
 }
 
-func playVoice(body io.ReadCloser) {
-	tmpfile, err := ioutil.TempFile("", "ydict")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer os.Remove(tmpfile.Name()) // clean up
-
-	data, err := ioutil.ReadAll(body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if _, err := tmpfile.Write(data); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := tmpfile.Close(); err != nil {
-		fmt.Println(err)
-	}
-
-	cmd := exec.Command("mpg123", tmpfile.Name())
-
-	if err := cmd.Start(); err != nil {
-		fmt.Println(err)
-	}
-
-	if err := cmd.Wait(); err != nil {
-		fmt.Println(err)
-	}
+func (this queryParam) getSentences(doc *goquery.Document) [][]string {
+	isChinese := this.IsChinese
+	result := [][]string{}
+	doc.Find("#bilingual ul li").Each(func(_ int, s *goquery.Selection) {
+		r := []string{}
+		s.Children().Each(func(ii int, ss *goquery.Selection) {
+			// Ignore source
+			if ii == 2 {
+				return
+			}
+			var sentence string
+			ss.Children().Each(func(iii int, sss *goquery.Selection) {
+				if text := strings.TrimSpace(sss.Text()); text != "" {
+					addSpace := (ii == 1 && isChinese) || (ii == 0 && !isChinese) && iii != 0 && text != "."
+					if addSpace {
+						text = " " + text
+					}
+					sentence += text
+				}
+			})
+			r = append(r, sentence)
+		})
+		if len(r) == 2 {
+			result = append(result, r)
+		}
+	})
+	return result
 }
 
 func getPronounce(doc *goquery.Document) string {
@@ -211,45 +273,6 @@ func getHint(doc *goquery.Document) [][]string {
 		s.Children().Remove()
 		mean := strings.TrimSpace(s.Text())
 		result = append(result, []string{word, mean})
-	})
-	return result
-}
-
-func getSentences(words []string, doc *goquery.Document, isChinese, withMore bool) [][]string {
-	result := [][]string{}
-	if withMore {
-		url := fmt.Sprintf("http://dict.youdao.com/example/blng/eng/%s", strings.Join(words, "_"))
-
-		if resp, err := http.Get(url); err != nil {
-			color.Red("Query failed with err: %s", err.Error())
-			os.Exit(1)
-		} else {
-			doc, _ = goquery.NewDocumentFromReader(resp.Body)
-		}
-	}
-
-	doc.Find("#bilingual ul li").Each(func(_ int, s *goquery.Selection) {
-		r := []string{}
-		s.Children().Each(func(ii int, ss *goquery.Selection) {
-			// Ignore source
-			if ii == 2 {
-				return
-			}
-			var sentence string
-			ss.Children().Each(func(iii int, sss *goquery.Selection) {
-				if text := strings.TrimSpace(sss.Text()); text != "" {
-					addSpace := (ii == 1 && isChinese) || (ii == 0 && !isChinese) && iii != 0 && text != "."
-					if addSpace {
-						text = " " + text
-					}
-					sentence += text
-				}
-			})
-			r = append(r, sentence)
-		})
-		if len(r) == 2 {
-			result = append(result, r)
-		}
 	})
 	return result
 }
