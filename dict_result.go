@@ -198,7 +198,7 @@ func SaveVoiceFile(name string, body io.ReadCloser) (string, error) {
 func DoPlayFile(aFile string) error {
 
 	cmd := exec.Command("mpg123", aFile)
-	if _, err := exec.LookPath("mpv"); nil != err {
+	if _, err := exec.LookPath("mpv"); err == nil {
 		// andoird termux only have mpv
 		cmd = exec.Command("mpv", aFile)
 		//log.Println("mpv ", aFile)
