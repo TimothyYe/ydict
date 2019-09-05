@@ -1,6 +1,7 @@
 module github.com/TimothyYe/ydict
 
 require (
+	gitee.com/wangtiga/exterror v0.0.0-20180917034039-f50084fd03bd // indirect
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/briandowns/spinner v0.0.0-20181029155426-195c31b675a7
 	github.com/fatih/color v1.7.0

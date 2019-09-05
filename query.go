@@ -32,18 +32,6 @@ func (this queryParam) DoQuery() {
 		return
 	}
 
-	//Init spinner
-	var s *spinner.Spinner
-	if !this.IsQuiet {
-		s = spinner.New(spinner.CharSets[35], 100*time.Millisecond)
-		s.Prefix = "Querying... "
-		if err := s.Color("green"); err != nil {
-			color.Red("Failed to set color for spinner")
-			os.Exit(1)
-		}
-		s.Start()
-	}
-
 	var dbCache *leveldb.DB = nil
 	if this.WithCache {
 		if ldb, err := OpenLocalDB(); nil != err {
@@ -63,6 +51,18 @@ func (this queryParam) DoQuery() {
 				return
 			}
 		}
+	}
+
+	//Init spinner
+	var s *spinner.Spinner
+	if !this.IsQuiet {
+		s = spinner.New(spinner.CharSets[35], 100*time.Millisecond)
+		s.Prefix = "Querying... "
+		if err := s.Color("green"); err != nil {
+			color.Red("Failed to set color for spinner")
+			os.Exit(1)
+		}
+		s.Start()
 	}
 
 	doc, docMore, audioFilePath := this.ReqWeb()
