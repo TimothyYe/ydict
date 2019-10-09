@@ -102,7 +102,8 @@ ydict -m <word(s) to query>
 4. Query and add this word into local cache, next time when you query the same word, it will be feched from the local cache and be much more faster.
 
 ```text
-ydict -c <word(s) to query>
+ydict -c <word(s) to query
+```
 
 ## SOCKS5 proxy
 
