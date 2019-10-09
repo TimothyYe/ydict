@@ -90,14 +90,19 @@ ydict <word(s) to query>
 2. Query with speech (__Available for MacOS & Linux__)
 
 ```text
-ydict <word(s) to query> -v
+ydict -v <word(s) to query>
 ```
 
 3. Query and show more example sentences
 
 ```text
-ydict <word(s) to query> -m
+ydict -m <word(s) to query>
 ```
+
+4. Query and add this word into local cache, next time when you query the same word, it will be feched from the local cache and be much more faster.
+
+```text
+ydict -c <word(s) to query>
 
 ## SOCKS5 proxy
 
