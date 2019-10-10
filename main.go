@@ -3,42 +3,40 @@ package main
 import (
 	"os"
 	"strings"
-)
 
-var (
-	proxy string
+	"github.com/TimothyYe/ydict/lib"
 )
 
 func main() {
 	//Check & load .env file
-	loadEnv()
+	lib.LoadEnv()
 
 	if len(os.Args) == 1 {
-		displayUsage()
+		lib.DisplayUsage()
 		os.Exit(0)
 	}
 
 	if len(os.Args) == 2 && os.Args[1] == "-h" {
-		displayUsage()
+		lib.DisplayUsage()
 		os.Exit(0)
 	}
 
-	words, withVoice, withMore, isQuiet, withCache, clearCache := parseArgs(os.Args[1:])
+	words, withVoice, withMore, isQuiet, withCache, clearCache := lib.ParseArgs(os.Args[1:])
 	if clearCache {
-		ClearCahceFiles()
+		lib.ClearCahceFiles()
 		return
 	}
 
-	queryP := queryParam{}
+	queryP := lib.QueryParam{}
 	queryP.Words = words
 	queryP.WordString = strings.Join(words, " ")
 	queryP.WithMore = withMore
 	queryP.WithCache = withCache
 	queryP.IsQuiet = isQuiet
 	queryP.IsMulti = (len(words) > 1)
-	queryP.IsChinese = isChinese(queryP.WordString)
+	queryP.IsChinese = lib.IsChinese(queryP.WordString)
 	queryP.WithVoice = withVoice
-	if !isAvailableOS() {
+	if !lib.IsAvailableOS() {
 		queryP.WithVoice = 0
 	}
 	queryP.DoQuery()

@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"fmt"
@@ -9,41 +9,10 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/fatih/color"
 	"github.com/joho/godotenv"
 )
 
-var (
-	//Version of ydict
-	Version = "0.1"
-	logo    = `
-██╗   ██╗██████╗ ██╗ ██████╗████████╗
-╚██╗ ██╔╝██╔══██╗██║██╔════╝╚══██╔══╝
- ╚████╔╝ ██║  ██║██║██║        ██║   
-  ╚██╔╝  ██║  ██║██║██║        ██║   
-   ██║   ██████╔╝██║╚██████╗   ██║   
-   ╚═╝   ╚═════╝ ╚═╝ ╚═════╝   ╚═╝   
-
-YDict V%s
-https://github.com/TimothyYe/ydict
-
-`
-)
-
-func displayUsage() {
-	logo = ""
-	color.Cyan(logo, Version)
-	color.Cyan("Usage:")
-	color.Cyan("ydict <word(s) to query>        Query the word(s)")
-	color.Cyan("ydict -v <word(s) to query>     Query with speech")
-	color.Cyan("ydict -m <word(s) to query>     Query with more example sentences")
-	color.Cyan("ydict -q <word(s) to query>     Query with quiet mode, don't show spinner")
-	color.Cyan("ydict -c <word(s) to query>     Query with local cache")
-	color.Cyan("ydict -clear                    Clear local cache")
-	color.Cyan("ydict -h                        For help")
-}
-
-func isChinese(str string) bool {
+func IsChinese(str string) bool {
 	for _, r := range str {
 		if unicode.Is(unicode.Scripts["Han"], r) {
 			return true
@@ -52,7 +21,7 @@ func isChinese(str string) bool {
 	return false
 }
 
-func isAvailableOS() bool {
+func IsAvailableOS() bool {
 	switch runtime.GOOS {
 	case "android":
 		return true
@@ -73,7 +42,7 @@ func getExecutePath() string {
 	return filepath.Dir(ex)
 }
 
-func loadEnv() {
+func LoadEnv() {
 	exPath := getExecutePath()
 	envPath := fmt.Sprintf("%s/.env", exPath)
 
@@ -91,7 +60,7 @@ func loadEnv() {
 	proxy = os.Getenv("SOCKS5")
 }
 
-func parseArgs(args []string) (
+func ParseArgs(args []string) (
 	words []string,
 	withVoice int,
 	withMore bool,
