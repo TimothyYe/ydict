@@ -4,6 +4,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/briandowns/spinner v0.0.0-20181029155426-195c31b675a7
 	github.com/fatih/color v1.7.0
+	github.com/gen2brain/beeep v0.0.0-20190719094215-ece0cb67ca77
 	github.com/gopherjs/gopherjs v0.0.0-20190812055157-5d271430af9f // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/mattn/go-colorable v0.0.9 // indirect

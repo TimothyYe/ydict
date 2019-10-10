@@ -3,8 +3,18 @@ package lib
 import (
 	"testing"
 
+	"github.com/gen2brain/beeep"
 	. "github.com/smartystreets/goconvey/convey"
 )
+
+func TestBeep(t *testing.T) {
+	err := beeep.Beep(beeep.DefaultFreq, beeep.DefaultDuration)
+	if err != nil {
+		panic(err)
+	}
+
+	beeep.Notify("YDict", "Hello World", "")
+}
 
 func TestIsChinese(t *testing.T) {
 

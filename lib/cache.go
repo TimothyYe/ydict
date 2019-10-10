@@ -69,7 +69,7 @@ func (this dictResult) RemoveAudioFile() error {
 
 func (this dictResult) SaveLocalDB(db *leveldb.DB) error {
 	if nil == db {
-		return errors.New("NeverGoHere")
+		return errors.New("invalid DB")
 	}
 	data, err := json.Marshal(this)
 	if nil != err {
@@ -197,14 +197,10 @@ func SaveVoiceFile(name string, body io.ReadCloser) (string, error) {
 }
 
 func DoPlayFile(aFile string) error {
-
 	cmd := exec.Command("mpg123", aFile)
 	if _, err := exec.LookPath("mpv"); err == nil {
 		// andoird termux only have mpv
 		cmd = exec.Command("mpv", aFile)
-		//log.Println("mpv ", aFile)
-	} else {
-		//log.Println("mpg123 ", aFile)
 	}
 
 	if err := cmd.Start(); err != nil {
