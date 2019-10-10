@@ -10,10 +10,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"errors"
+
 	"github.com/fatih/color"
 	"github.com/syndtr/goleveldb/leveldb"
-	"github.com/syndtr/goleveldb/leveldb/errors"
-	"github.com/wangtiga/exterror"
+	de "github.com/syndtr/goleveldb/leveldb/errors"
 )
 
 type dictResult struct {
@@ -33,24 +34,24 @@ func OpenLocalDB() (*leveldb.DB, error) {
 	dbDir := getDictDBDir()
 	db, err := leveldb.OpenFile(dbDir, nil)
 	if nil != err {
-		return nil, exterror.New(err)
+		return nil, err
 	}
 	return db, nil
 }
 
 func QueryLocalDB(key string, db *leveldb.DB) (*dictResult, error) {
 	data, err := db.Get([]byte(key), nil)
-	if errors.ErrNotFound == err {
+	if de.ErrNotFound == err {
 		// first query word always return NotFound
 		return nil, nil
 	}
 	if nil != err {
-		return nil, exterror.New(err)
+		return nil, err
 	}
 
 	ret := dictResult{}
 	if err := json.Unmarshal(data, &ret); nil != err {
-		return nil, exterror.New(err)
+		return nil, err
 	}
 	return &ret, nil
 }
@@ -61,22 +62,22 @@ func (this dictResult) RemoveAudioFile() error {
 	}
 	err := os.Remove(this.AudioFilePath) // clean up
 	if nil != err && !os.IsNotExist(err) {
-		return exterror.New(err)
+		return err
 	}
 	return nil
 }
 
 func (this dictResult) SaveLocalDB(db *leveldb.DB) error {
 	if nil == db {
-		return exterror.New("NeverGoHere")
+		return errors.New("NeverGoHere")
 	}
 	data, err := json.Marshal(this)
 	if nil != err {
-		return exterror.New(err)
+		return err
 	}
 	key := this.WordString
 	if err := db.Put([]byte(key), data, nil); nil != err {
-		return exterror.New(err)
+		return err
 	}
 	return nil
 }
@@ -165,29 +166,29 @@ func SaveVoiceFile(name string, body io.ReadCloser) (string, error) {
 	tmpfile, err := ioutil.TempFile(ydictDir, name)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			return "", exterror.New(err)
+			return "", err
 		}
 		err = os.MkdirAll(ydictDir, 0700)
 		if nil != err {
-			return "", exterror.New(err)
+			return "", err
 		}
 		tmpfile, err = ioutil.TempFile(ydictDir, name)
 		if nil != err {
-			return "", exterror.New(err)
+			return "", err
 		}
 	}
 
 	data, err := ioutil.ReadAll(body)
 	if err != nil {
-		return "", exterror.New(err)
+		return "", err
 	}
 
 	if _, err := tmpfile.Write(data); err != nil {
-		return "", exterror.New(err)
+		return "", err
 	}
 
 	if err := tmpfile.Close(); err != nil {
-		return "", exterror.New(err)
+		return "", err
 	}
 
 	aFile := tmpfile.Name()
@@ -207,11 +208,11 @@ func DoPlayFile(aFile string) error {
 	}
 
 	if err := cmd.Start(); err != nil {
-		return exterror.New(err)
+		return err
 	}
 
 	if err := cmd.Wait(); err != nil {
-		return exterror.New(err)
+		return err
 	}
 	return nil
 }
