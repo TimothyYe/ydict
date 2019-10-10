@@ -145,13 +145,21 @@ func ClearCahceFiles() {
 }
 
 func getDictDir() string {
-	tmpDir := os.TempDir()
-	ydictDir := filepath.Join(tmpDir, "ydict")
-	return ydictDir
+	dbDir := os.Getenv("YDICT_DB")
+	if dbDir == "" {
+		dbDir = filepath.Join(os.Getenv("HOME"), ".ydict")
+	}
+
+	return dbDir
 }
+
 func getDictDBDir() string {
-	tmpDir := getDictDir()
-	ydictDir := filepath.Join(tmpDir, "db")
+	dbDir := os.Getenv("YDICT_DB")
+	if dbDir == "" {
+		dbDir = filepath.Join(os.Getenv("HOME"), ".ydict")
+	}
+
+	ydictDir := filepath.Join(dbDir, "db")
 	return ydictDir
 }
 
