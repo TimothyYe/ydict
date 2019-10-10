@@ -13,7 +13,10 @@ func TestBeep(t *testing.T) {
 		panic(err)
 	}
 
-	beeep.Notify("YDict", "Hello World", "")
+	err = beeep.Notify("YDict", "Hello World", "")
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TestIsChinese(t *testing.T) {
