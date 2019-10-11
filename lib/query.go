@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"fmt"
@@ -15,7 +15,11 @@ import (
 	proxier "golang.org/x/net/proxy"
 )
 
-type queryParam struct {
+var (
+	proxy string
+)
+
+type QueryParam struct {
 	Words      []string
 	WordString string
 
@@ -27,7 +31,7 @@ type queryParam struct {
 	WithVoice int
 }
 
-func (this queryParam) DoQuery() {
+func (this QueryParam) DoQuery() {
 	if len(this.WordString) == 0 {
 		return
 	}
@@ -88,7 +92,7 @@ func (this queryParam) DoQuery() {
 	}
 }
 
-func (this queryParam) ReqWeb() (
+func (this QueryParam) ReqWeb() (
 	doc *goquery.Document,
 	docMore *goquery.Document,
 	audioFilePath string,
@@ -112,7 +116,6 @@ func (this queryParam) ReqWeb() (
 	moreURL := fmt.Sprintf(urlMore, moreString)
 
 	if proxy != "" {
-
 		client := &http.Client{}
 		dialer, err := proxier.SOCKS5("tcp", proxy, nil, proxier.Direct)
 
@@ -141,7 +144,6 @@ func (this queryParam) ReqWeb() (
 				}
 			}
 		}
-
 	} else {
 
 		resp, err := http.Get(queryURL)
@@ -175,7 +177,7 @@ func (this queryParam) ReqWeb() (
 	return doc, docMore, audioFilePath
 }
 
-func (this queryParam) ParseWeb(doc, docMore *goquery.Document) dictResult {
+func (this QueryParam) ParseWeb(doc, docMore *goquery.Document) dictResult {
 	ret := dictResult{}
 	ret.WordString = this.WordString
 	if this.IsChinese {
@@ -215,7 +217,7 @@ func (this queryParam) ParseWeb(doc, docMore *goquery.Document) dictResult {
 	return ret
 }
 
-func (this queryParam) getSentences(doc *goquery.Document) [][]string {
+func (this QueryParam) getSentences(doc *goquery.Document) [][]string {
 	isChinese := this.IsChinese
 	result := [][]string{}
 	doc.Find("#bilingual ul li").Each(func(_ int, s *goquery.Selection) {

@@ -1,10 +1,23 @@
-package main
+package lib
 
 import (
 	"testing"
 
+	"github.com/gen2brain/beeep"
 	. "github.com/smartystreets/goconvey/convey"
 )
+
+func TestBeep(t *testing.T) {
+	err := beeep.Beep(beeep.DefaultFreq, beeep.DefaultDuration)
+	if err != nil {
+		panic(err)
+	}
+
+	err = beeep.Notify("YDict", "Hello World", "")
+	if err != nil {
+		panic(err)
+	}
+}
 
 func TestIsChinese(t *testing.T) {
 
@@ -13,7 +26,7 @@ func TestIsChinese(t *testing.T) {
 		str := "测试"
 
 		Convey("Call isChinese func", func() {
-			result := isChinese(str)
+			result := IsChinese(str)
 
 			Convey("result should be: true", func() {
 				So(result, ShouldEqual, true)
@@ -30,8 +43,8 @@ func TestParseArgs(t *testing.T) {
 		withAll := []string{"-v", "-m", "-q", "-c", "-clear", "aa", "bb"}
 
 		Convey("Call parse func", func() {
-			words01, ret01, ret02, ret03, ret04, ret05 := parseArgs(withoutAll)
-			words11, ret11, ret12, ret13, ret14, ret15 := parseArgs(withAll)
+			words01, ret01, ret02, ret03, ret04, ret05 := ParseArgs(withoutAll)
+			words11, ret11, ret12, ret13, ret14, ret15 := ParseArgs(withAll)
 
 			Convey("result should be: true & false", func() {
 				So(words01, ShouldContain, "aa")
