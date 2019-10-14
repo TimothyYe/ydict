@@ -22,7 +22,7 @@ func main() {
 	lib.LoadEnv()
 
 	if len(os.Args) == 1 ||
-		(len(os.Args) > 1 && (os.Args[1] == "-h" || os.Args[1] == "help")) {
+		(len(os.Args) > 1 && (os.Args[1] == "-h" || os.Args[1] == "-help")) {
 		lib.DisplayLogo()
 	}
 
@@ -58,7 +58,7 @@ func main() {
 		},
 	}
 
-	rootCmd.PersistentFlags().IntVarP(&withVoice, "voice", "v", 0, "Query with voice speech, the default voice play count is 1.")
+	rootCmd.PersistentFlags().IntVarP(&withVoice, "voice", "v", 0, "Query with voice speech, the default voice play count is 0.")
 	rootCmd.PersistentFlags().BoolVarP(&withMore, "more", "m", false, "Query with more example sentences.")
 	rootCmd.PersistentFlags().BoolVarP(&withCache, "cache", "c", false, "Query with local cache, and save the query word(s) into the cache.")
 	rootCmd.PersistentFlags().BoolVarP(&withReset, "reset", "r", false, "Clear all the words from the local cache.")
