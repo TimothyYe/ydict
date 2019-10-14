@@ -11,6 +11,7 @@ require (
 	github.com/mattn/go-isatty v0.0.4 // indirect
 	github.com/smartystreets/assertions v1.0.1 // indirect
 	github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337
+	github.com/spf13/cobra v0.0.5
 	github.com/syndtr/goleveldb v1.0.0
 	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297
 	golang.org/x/sync v0.0.0-20190423024810-112230192c58 // indirect
