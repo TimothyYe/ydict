@@ -177,8 +177,8 @@ func (this QueryParam) ReqWeb() (
 	return doc, docMore, audioFilePath
 }
 
-func (this QueryParam) ParseWeb(doc, docMore *goquery.Document) dictResult {
-	ret := dictResult{}
+func (this QueryParam) ParseWeb(doc, docMore *goquery.Document) DictResult {
+	ret := DictResult{}
 	ret.WordString = this.WordString
 	if this.IsChinese {
 		// Find the result

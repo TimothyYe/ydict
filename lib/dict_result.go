@@ -11,7 +11,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
-type dictResult struct {
+type DictResult struct {
 	WordString string
 
 	PartOfSpeech string
@@ -24,7 +24,7 @@ type dictResult struct {
 	AudioFilePath string
 }
 
-func (this dictResult) RemoveAudioFile() error {
+func (this DictResult) RemoveAudioFile() error {
 	if len(this.AudioFilePath) == 0 {
 		return nil
 	}
@@ -35,7 +35,7 @@ func (this dictResult) RemoveAudioFile() error {
 	return nil
 }
 
-func (this dictResult) SaveLocalDB(db *leveldb.DB) error {
+func (this DictResult) SaveLocalDB(db *leveldb.DB) error {
 	if nil == db {
 		return errors.New("invalid DB")
 	}
@@ -50,7 +50,7 @@ func (this dictResult) SaveLocalDB(db *leveldb.DB) error {
 	return nil
 }
 
-func (this dictResult) Print(fromTag string, playCount int) {
+func (this DictResult) Print(fromTag string, playCount int) {
 	if this.PartOfSpeech != "" {
 		fmt.Println()
 		fmt.Printf("%14s ", color.MagentaString(this.PartOfSpeech))

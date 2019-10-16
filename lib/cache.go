@@ -23,7 +23,7 @@ func OpenLocalDB() (*leveldb.DB, error) {
 	return db, nil
 }
 
-func QueryLocalDB(key string, db *leveldb.DB) (*dictResult, error) {
+func QueryLocalDB(key string, db *leveldb.DB) (*DictResult, error) {
 	data, err := db.Get([]byte(key), nil)
 	if de.ErrNotFound == err {
 		// first query word always return NotFound
@@ -33,20 +33,43 @@ func QueryLocalDB(key string, db *leveldb.DB) (*dictResult, error) {
 		return nil, err
 	}
 
-	ret := dictResult{}
+	ret := DictResult{}
 	if err := json.Unmarshal(data, &ret); nil != err {
 		return nil, err
 	}
 	return &ret, nil
 }
 
-func DeleteWords(args []string) error {
+func ScanWords() (map[string]DictResult, error) {
 	db, err := OpenLocalDB()
-
 	if err != nil {
 		color.Red("OpenLocalDb Fail! Cause: %s", err)
+		return nil, err
 	}
 
+	defer db.Close()
+
+	dict := map[string]DictResult{}
+	iter := db.NewIterator(nil, nil)
+	for iter.Next() {
+		ret := DictResult{}
+		if err := json.Unmarshal(iter.Value(), &ret); nil != err {
+			return nil, err
+		}
+
+		dict[string(iter.Key())] = ret
+	}
+
+	defer iter.Release()
+	return dict, nil
+}
+
+func DeleteWords(args []string) error {
+	db, err := OpenLocalDB()
+	if err != nil {
+		color.Red("OpenLocalDb Fail! Cause: %s", err)
+		return err
+	}
 	defer db.Close()
 
 	if err := db.Delete([]byte(strings.Join(args, " ")), nil); err != nil {
