@@ -16,6 +16,7 @@ var (
 	withCache bool
 	isQuiet   bool
 	isDelete  bool
+	isPlay    int
 	withReset bool
 )
 
@@ -31,11 +32,28 @@ func main() {
 	var rootCmd = &cobra.Command{
 		Use: "ydict",
 		Run: func(cmd *cobra.Command, args []string) {
-			if args[0] == "help" {
+			if len(args) > 0 && args[0] == "help" {
 				if err := cmd.Usage(); err != nil {
 					fmt.Println(err)
 					os.Exit(1)
 				}
+				return
+			}
+
+			if isPlay > 0 {
+				if dict, err := lib.ScanWords(); err != nil {
+					color.Red("  Failed to scan words from the cache.")
+				} else {
+					for k, v := range dict {
+						color.Blue(k)
+
+						if len(v.Meanings) > 0 {
+							fmt.Println()
+							fmt.Printf("%s", color.GreenString(strings.Join(v.Meanings, "; ")))
+						}
+					}
+				}
+
 				return
 			}
 
@@ -73,6 +91,7 @@ func main() {
 	rootCmd.PersistentFlags().BoolVarP(&withReset, "reset", "r", false, "Clear all the words from the local cache.")
 	rootCmd.PersistentFlags().BoolVarP(&isQuiet, "quiet", "q", false, "Query with quiet mode, don't show spinner.")
 	rootCmd.PersistentFlags().BoolVarP(&isDelete, "delete", "d", false, "Remove word(s) from the cache.")
+	rootCmd.PersistentFlags().IntVarP(&isPlay, "play", "p", 0, "Scan and display all the words in local cache.")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
