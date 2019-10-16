@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/TimothyYe/ydict/lib"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +15,7 @@ var (
 	withMore  bool
 	withCache bool
 	isQuiet   bool
+	isDelete  bool
 	withReset bool
 )
 
@@ -42,6 +44,13 @@ func main() {
 				return
 			}
 
+			if isDelete {
+				if err := lib.DeleteWords(args); err == nil {
+					color.Green("  Word '%s' has already been removed from the cache.", strings.Join(args, " "))
+				}
+				return
+			}
+
 			queryP := lib.QueryParam{}
 			queryP.Words = args
 			queryP.WordString = strings.Join(args, " ")
@@ -63,6 +72,7 @@ func main() {
 	rootCmd.PersistentFlags().BoolVarP(&withCache, "cache", "c", false, "Query with local cache, and save the query word(s) into the cache.")
 	rootCmd.PersistentFlags().BoolVarP(&withReset, "reset", "r", false, "Clear all the words from the local cache.")
 	rootCmd.PersistentFlags().BoolVarP(&isQuiet, "quiet", "q", false, "Query with quiet mode, don't show spinner.")
+	rootCmd.PersistentFlags().BoolVarP(&isDelete, "delete", "d", false, "Remove word(s) from the cache.")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

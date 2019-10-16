@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/fatih/color"
 	"github.com/syndtr/goleveldb/leveldb"
@@ -37,6 +38,22 @@ func QueryLocalDB(key string, db *leveldb.DB) (*dictResult, error) {
 		return nil, err
 	}
 	return &ret, nil
+}
+
+func DeleteWords(args []string) error {
+	db, err := OpenLocalDB()
+
+	if err != nil {
+		color.Red("OpenLocalDb Fail! Cause: %s", err)
+	}
+
+	defer db.Close()
+
+	if err := db.Delete([]byte(strings.Join(args, " ")), nil); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func ClearCahceFiles() {
