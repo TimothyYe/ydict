@@ -5,12 +5,14 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
+	"github.com/gen2brain/beeep"
 	"github.com/syndtr/goleveldb/leveldb"
 	proxier "golang.org/x/net/proxy"
 )
@@ -244,6 +246,35 @@ func (this QueryParam) getSentences(doc *goquery.Document) [][]string {
 		}
 	})
 	return result
+}
+
+func DisplayWords(withPlay int) {
+	if dict, err := ScanWords(); err != nil {
+		color.Red("  Failed to scan words from the cache.")
+	} else {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt)
+
+		go func() {
+			<-c
+			os.Exit(0)
+		}()
+
+		for {
+			for k, v := range dict {
+				message := k
+				if len(v.Pronounce) > 0 {
+					message = fmt.Sprintf("%s\r\n    %s\r\n", message, v.Pronounce)
+				}
+				// if len(v.Result) > 0 {
+				// 	message = fmt.Sprintf("\r\n%s%s", message, v.Result)
+				// }
+
+				beeep.Notify("YDict", message, "")
+				time.Sleep(time.Second * time.Duration(withPlay))
+			}
+		}
+	}
 }
 
 func getPronounce(doc *goquery.Document) string {
