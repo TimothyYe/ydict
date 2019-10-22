@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/TimothyYe/ydict/lib"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +15,8 @@ var (
 	withMore  bool
 	withCache bool
 	isQuiet   bool
+	isDelete  bool
+	withPlay  int
 	withReset bool
 )
 
@@ -29,7 +32,7 @@ func main() {
 	var rootCmd = &cobra.Command{
 		Use: "ydict",
 		Run: func(cmd *cobra.Command, args []string) {
-			if args[0] == "help" {
+			if len(args) > 0 && args[0] == "help" {
 				if err := cmd.Usage(); err != nil {
 					fmt.Println(err)
 					os.Exit(1)
@@ -37,8 +40,20 @@ func main() {
 				return
 			}
 
+			if withPlay > 0 {
+				lib.DisplayWords(withPlay)
+				return
+			}
+
 			if withReset {
 				lib.ClearCahceFiles()
+				return
+			}
+
+			if isDelete {
+				if err := lib.DeleteWords(args); err == nil {
+					color.Green("  Word '%s' has already been removed from the cache.", strings.Join(args, " "))
+				}
 				return
 			}
 
@@ -63,6 +78,8 @@ func main() {
 	rootCmd.PersistentFlags().BoolVarP(&withCache, "cache", "c", false, "Query with local cache, and save the query word(s) into the cache.")
 	rootCmd.PersistentFlags().BoolVarP(&withReset, "reset", "r", false, "Clear all the words from the local cache.")
 	rootCmd.PersistentFlags().BoolVarP(&isQuiet, "quiet", "q", false, "Query with quiet mode, don't show spinner.")
+	rootCmd.PersistentFlags().BoolVarP(&isDelete, "delete", "d", false, "Remove word(s) from the cache.")
+	rootCmd.PersistentFlags().IntVarP(&withPlay, "play", "p", 5, "Scan and display all the words in local cache.")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
