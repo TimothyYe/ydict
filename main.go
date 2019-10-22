@@ -18,6 +18,7 @@ var (
 	isDelete  bool
 	withPlay  int
 	withReset bool
+	withList  bool
 )
 
 func main() {
@@ -37,6 +38,11 @@ func main() {
 					fmt.Println(err)
 					os.Exit(1)
 				}
+				return
+			}
+
+			if withList {
+				lib.ListWords(withPlay)
 				return
 			}
 
@@ -80,6 +86,7 @@ func main() {
 	rootCmd.PersistentFlags().BoolVarP(&isQuiet, "quiet", "q", false, "Query with quiet mode, don't show spinner.")
 	rootCmd.PersistentFlags().BoolVarP(&isDelete, "delete", "d", false, "Remove word(s) from the cache.")
 	rootCmd.PersistentFlags().IntVarP(&withPlay, "play", "p", 0, "Scan and display all the words in local cache.")
+	rootCmd.PersistentFlags().BoolVarP(&withList, "list", "l", false, "List all the words from the local cache.")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

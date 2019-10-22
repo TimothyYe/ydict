@@ -248,6 +248,16 @@ func (this QueryParam) getSentences(doc *goquery.Document) [][]string {
 	return result
 }
 
+func ListWords(withPlay int) {
+	if dict, err := ScanWords(); err != nil {
+		color.Red("  Failed to scan words from the cache.")
+	} else {
+		for k, _ := range dict {
+			color.Cyan("%s", k)
+		}
+	}
+}
+
 func DisplayWords(withPlay int) {
 	if dict, err := ScanWords(); err != nil {
 		color.Red("  Failed to scan words from the cache.")
