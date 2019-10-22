@@ -280,7 +280,10 @@ func DisplayWords(withPlay int) {
 				// 	message = fmt.Sprintf("\r\n%s%s", message, v.Result)
 				// }
 
-				beeep.Notify("YDict", message, "")
+				if err := beeep.Notify("YDict", message, ""); err != nil {
+					color.Red(err.Error())
+				}
+
 				time.Sleep(time.Second * time.Duration(withPlay))
 			}
 		}
