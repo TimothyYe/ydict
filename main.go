@@ -79,7 +79,7 @@ func main() {
 	rootCmd.PersistentFlags().BoolVarP(&withReset, "reset", "r", false, "Clear all the words from the local cache.")
 	rootCmd.PersistentFlags().BoolVarP(&isQuiet, "quiet", "q", false, "Query with quiet mode, don't show spinner.")
 	rootCmd.PersistentFlags().BoolVarP(&isDelete, "delete", "d", false, "Remove word(s) from the cache.")
-	rootCmd.PersistentFlags().IntVarP(&withPlay, "play", "p", 5, "Scan and display all the words in local cache.")
+	rootCmd.PersistentFlags().IntVarP(&withPlay, "play", "p", 0, "Scan and display all the words in local cache.")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
