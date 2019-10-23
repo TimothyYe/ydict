@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -14,6 +15,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/gen2brain/beeep"
 	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/xwjdsh/fy"
 	proxier "golang.org/x/net/proxy"
 )
 
@@ -25,12 +27,13 @@ type QueryParam struct {
 	Words      []string
 	WordString string
 
-	IsQuiet   bool
-	IsChinese bool
-	IsMulti   bool
-	WithMore  bool
-	WithCache bool
-	WithVoice int
+	IsSentence bool
+	IsQuiet    bool
+	IsChinese  bool
+	IsMulti    bool
+	WithMore   bool
+	WithCache  bool
+	WithVoice  int
 }
 
 func (this QueryParam) DoQuery() {
@@ -39,7 +42,7 @@ func (this QueryParam) DoQuery() {
 	}
 
 	var dbCache *leveldb.DB = nil
-	if this.WithCache {
+	if !this.IsSentence && this.WithCache {
 		if ldb, err := OpenLocalDB(); nil != err {
 			color.Red("OpenLocalDb Fail! Cause: %s", err)
 		} else {
@@ -71,9 +74,42 @@ func (this QueryParam) DoQuery() {
 		s.Start()
 	}
 
-	doc, docMore, audioFilePath := this.ReqWeb()
+	var (
+		doc           *goquery.Document
+		docMore       *goquery.Document
+		audioFilePath string
+
+		// for sentence
+		sentenceResponse *fy.Response
+	)
+
+	if this.IsSentence {
+		req := fy.Request{
+			FromLang: fy.Chinese,
+			ToLang:   fy.English,
+			Text:     this.WordString,
+		}
+		if !this.IsChinese {
+			req.FromLang, req.ToLang = req.ToLang, req.FromLang
+		}
+		sentenceResponse = fy.YoudaoTranslate(context.Background(), req)
+	} else {
+		doc, docMore, audioFilePath = this.ReqWeb()
+	}
+
 	if !this.IsQuiet {
 		s.Stop()
+	}
+
+	if this.IsSentence {
+		if err := sentenceResponse.Err; err != nil {
+			color.Red("Some Thing Wrong! Cause: %s", err)
+			os.Exit(1)
+		}
+		fmt.Println()
+		color.Green("    %s", sentenceResponse.Result)
+		fmt.Println()
+		return
 	}
 
 	ret := this.ParseWeb(doc, docMore)

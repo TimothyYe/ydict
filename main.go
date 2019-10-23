@@ -11,14 +11,15 @@ import (
 )
 
 var (
-	withVoice int
-	withMore  bool
-	withCache bool
-	isQuiet   bool
-	isDelete  bool
-	withPlay  int
-	withReset bool
-	withList  bool
+	withVoice  int
+	withMore   bool
+	withCache  bool
+	isQuiet    bool
+	isDelete   bool
+	withPlay   int
+	withReset  bool
+	withList   bool
+	isSentence bool
 )
 
 func main() {
@@ -71,6 +72,7 @@ func main() {
 			queryP.IsQuiet = isQuiet
 			queryP.IsMulti = (len(args) > 1)
 			queryP.IsChinese = lib.IsChinese(queryP.WordString)
+			queryP.IsSentence = isSentence
 			queryP.WithVoice = withVoice
 			if !lib.IsAvailableOS() {
 				queryP.WithVoice = 0
@@ -87,6 +89,7 @@ func main() {
 	rootCmd.PersistentFlags().BoolVarP(&isDelete, "delete", "d", false, "Remove word(s) from the cache.")
 	rootCmd.PersistentFlags().IntVarP(&withPlay, "play", "p", 0, "Scan and display all the words in local cache.")
 	rootCmd.PersistentFlags().BoolVarP(&withList, "list", "l", false, "List all the words from the local cache.")
+	rootCmd.PersistentFlags().BoolVarP(&isSentence, "sentence", "s", false, "Translation of sentences.")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
