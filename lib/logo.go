@@ -4,8 +4,7 @@ import "github.com/fatih/color"
 
 var (
 	//Version of ydict
-	Version = "0.1"
-	logo    = `
+	logo = `
 ██╗   ██╗██████╗ ██╗ ██████╗████████╗
 ╚██╗ ██╔╝██╔══██╗██║██╔════╝╚══██╔══╝
  ╚████╔╝ ██║  ██║██║██║        ██║   
@@ -19,6 +18,6 @@ https://github.com/TimothyYe/ydict
 `
 )
 
-func DisplayLogo() {
-	color.Cyan(logo, Version)
+func DisplayLogo(version string) {
+	color.Cyan(logo, version)
 }

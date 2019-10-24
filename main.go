@@ -11,6 +11,7 @@ import (
 )
 
 var (
+	Version    = "0.1"
 	withVoice  int
 	withMore   bool
 	withCache  bool
@@ -28,7 +29,7 @@ func main() {
 
 	if len(os.Args) == 1 ||
 		(len(os.Args) > 1 && (os.Args[1] == "-h" || os.Args[1] == "-help")) {
-		lib.DisplayLogo()
+		lib.DisplayLogo(Version)
 	}
 
 	var rootCmd = &cobra.Command{
