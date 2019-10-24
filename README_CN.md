@@ -76,6 +76,21 @@ yum install -y mpg123
 ```
 
 ## 使用的正确姿势
+```text
+ydict [flags]
+
+Flags:
+  -c, --cache       Query with local cache, and save the query word(s) into the cache.
+  -d, --delete      Remove word(s) from the cache.
+  -h, --help        help for ydict
+  -l, --list        List all the words from the local cache.
+  -m, --more        Query with more example sentences.
+  -p, --play int    Scan and display all the words in local cache.
+  -q, --quiet       Query with quiet mode, don't show spinner.
+  -r, --reset       Clear all the words from the local cache.
+  -s, --sentence    Translation of sentences.
+  -v, --voice int   Query with voice speech, the default voice play count is 0.
+```
 
 1. 仅查询单词
 
@@ -100,6 +115,12 @@ ydict -m <要查询的单词或词组>
 ydict -c <要查询的单词或词组>
 ```
 
+5. 查询整个句子
+
+```text
+ydict -s "你觉得咋样？"
+```
+
 ## SOCKS5 代理支持
 
 从版本 V0.5 开始, 支持SOCKS5代理功能. 在ydict的相同目录下，创建 ```.env``` 文件，并填入如下示例内容:
@@ -109,6 +130,31 @@ SOCKS5=127.0.0.1:7070
 ```
 
 配置成功后，所有的查询将使用配置指定的SOCKS5代理。
+
+## 单词本功能
+
+从新版 ydict V2.0 开始，支持单词本功能，方便增删和管理生词，并且可以通过定时消息推送进行随机回放，方便背诵和记忆。
+
+* 增加新词到单词本
+```bash
+ydict -c hello
+```
+
+* 从单词本中删除单词
+```bash
+ydict -d hello
+```
+
+* 从单词本中列出所有单词
+```bash
+ydict -l
+```
+
+* 每隔10秒随机推送并展示单词
+```bash
+ydict -p 10
+```
+![](https://raw.githubusercontent.com/TimothyYe/ydict/master/snapshots/play.png)
 
 ## 帮助与更多信息
 
