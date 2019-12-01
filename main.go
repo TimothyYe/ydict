@@ -11,6 +11,7 @@ import (
 )
 
 var (
+	// Version is used to set the version of ydict
 	Version    = "0.1"
 	withVoice  int
 	withMore   bool

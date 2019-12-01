@@ -106,6 +106,7 @@ func (this QueryParam) DoQuery() {
 			color.Red("Some Thing Wrong! Cause: %s", err)
 			os.Exit(1)
 		}
+
 		fmt.Println()
 		color.Green("    %s", sentenceResponse.Result)
 		fmt.Println()
