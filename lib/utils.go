@@ -4,13 +4,41 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 	"unicode"
 
+	"github.com/fatih/color"
 	"github.com/joho/godotenv"
 )
+
+// GetBakFileName generates a backup file name by current date and time
+func GetBakFileName() string {
+	return fmt.Sprintf("ydict-%s.tar.gz", time.Now().Format("20060102150405"))
+}
+
+// Execute executes shell commands with arguments
+func Execute(workDir, script string, args ...string) bool {
+	cmd := exec.Command(script, args...)
+
+	if workDir != "" {
+		cmd.Dir = workDir
+	}
+
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		color.Red("%s", err.Error())
+		return false
+	}
+
+	return true
+}
 
 func IsChinese(str string) bool {
 	for _, r := range str {

@@ -20,6 +20,7 @@ var (
 	withPlay   int
 	withReset  bool
 	withList   bool
+	withBackup bool
 	isSentence bool
 )
 
@@ -58,6 +59,12 @@ func main() {
 				return
 			}
 
+			if withBackup {
+				// backup the LevelDB
+				lib.BackupCahceFiles()
+				return
+			}
+
 			if isDelete {
 				if err := lib.DeleteWords(args); err == nil {
 					color.Green("  Word '%s' has already been removed from the cache.", strings.Join(args, " "))
@@ -91,6 +98,7 @@ func main() {
 	rootCmd.PersistentFlags().IntVarP(&withPlay, "play", "p", 0, "Scan and display all the words in local cache.")
 	rootCmd.PersistentFlags().BoolVarP(&withList, "list", "l", false, "List all the words from the local cache.")
 	rootCmd.PersistentFlags().BoolVarP(&isSentence, "sentence", "s", false, "Translation of sentences.")
+	rootCmd.PersistentFlags().BoolVarP(&withBackup, "backup", "b", false, "Backup the cached words.")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

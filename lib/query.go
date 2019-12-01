@@ -288,8 +288,8 @@ func ListWords(withPlay int) {
 	if dict, err := ScanWords(); err != nil {
 		color.Red("  Failed to scan words from the cache.")
 	} else {
-		for k, _ := range dict {
-			color.Cyan("%s", k)
+		for k, v := range dict {
+			fmt.Printf("%s \t %s", color.CyanString("%s", k), color.GreenString("%s", v.Result))
 		}
 	}
 }

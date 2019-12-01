@@ -79,6 +79,22 @@ func DeleteWords(args []string) error {
 	return nil
 }
 
+func BackupCahceFiles() {
+	dictDir := getDictDir()
+	if _, err := os.Stat(dictDir); err != nil {
+		color.Red("Cannot find the DB path", err.Error())
+		return
+	}
+
+	fileName := GetBakFileName()
+	dstFile := filepath.Join(dictDir, fileName)
+
+	result := Execute(dictDir, "tar", "-czvf", dstFile, "./db")
+	if result {
+		color.Green("Local DB backup to: %s", dstFile)
+	}
+}
+
 func ClearCahceFiles() {
 	tmpDir := getDictDir()
 	err := os.RemoveAll(tmpDir)
