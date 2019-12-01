@@ -81,7 +81,7 @@ func DeleteWords(args []string) error {
 
 func BackupCahceFiles() {
 	dictDir := getDictDir()
-	if _, err := os.Stat(dictDir); err != nil {
+	if _, err := os.Stat(dictDir); os.IsNotExist(err) {
 		color.Red("Cannot find the DB path", err.Error())
 		return
 	}
