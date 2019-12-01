@@ -3,7 +3,7 @@ BINARY=ydict
 # Builds the project
 build:
 		GO111MODULE=on go build -o ${BINARY} -ldflags "-X main.Version=${VERSION}"
-	  GO111MODULE=on go test -v
+		GO111MODULE=on go test -v
 # Installs our project: copies binaries
 install:
 		GO111MODULE=on go install
