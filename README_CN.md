@@ -56,7 +56,13 @@ go get github.com/TimothyYe/ydict
 
 从V0.9版本开始，提供语音朗读功能。为开启此功能，你需要先安装mpg123组件。
 
-___注意:___ 语音朗读功能当前仅支持操作系统 MacOS/Linux。
+#### Windows x64
+
+>   `Windows` 下语音朗读适配方案由 [ycrao](https://github.com/ycrao/learning_golang/tree/main/cmd-bass-player) 提供。
+
+- 拷贝 `bass.dll` 和 `mpg123.exe` （也可同 `ydict.exe`） 文件一起 到 Windows 系统目录 (如 `C:\Windows\` 或 `C:\Windows\System32`)。
+- 或者拷贝 `bass.dll` 和 `mpg123.exe` （也可同 `ydict.exe`） 文件一起文件到某一特定目录下，然后添加该目录路径到 `PATH` 系统环境变量中。
+
 
 #### Mac OS
 
@@ -98,7 +104,7 @@ Flags:
 ydict <要查询的单词或词组>
 ```
 
-2. 查询并朗读单词 (__目前仅支持 MacOS 和 Linux__)
+2. 查询并朗读单词
 
 ```text
 ydict -v <要查询的单词或词组>

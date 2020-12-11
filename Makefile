@@ -25,7 +25,7 @@ release:
 		# Build for win
 		go clean
 		CGO_ENABLED=0 GOOS=windows GOARCH=amd64 GO111MODULE=on go build -ldflags "-s -w -X main.Version=${VERSION}"
-		tar czvf ${BINARY}-win64-${VERSION}.tar.gz ./${BINARY}.exe
+		tar czvf ${BINARY}-win64-${VERSION}.tar.gz ./${BINARY}.exe ./win-deps/bass.dll ./win-deps/mpg123.exe
 		go clean
 # Cleans our projects: deletes binaries
 clean:

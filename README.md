@@ -50,7 +50,7 @@ go get github.com/TimothyYe/ydict
 
 #### Manual Installation
 
-Download it from [releases](https://github.com/TimothyYe/ydict/releases), and extact it to /usr/bin.
+Download it from [releases](https://github.com/TimothyYe/ydict/releases), and extract  it to /usr/bin.
 
 #### Integrate with Vim
 
@@ -60,7 +60,12 @@ To query words from Vim, you need another Vim plugin: [vim-ydict](https://github
 
 Starting from V0.9, speech feature is available. You need to install mpg123 to enable this feature.
 
-___NOTICE:___ Currently, speech feature is only available for MacOS/Linux.
+#### Windows x64
+
+>   Speech Adaptation by [ycrao](https://github.com/ycrao/learning_golang/tree/main/cmd-bass-player) under `Windows` OS.
+
+- Just copy `bass.dll` and `mpg123.exe` (can also with `ydict.exe`) file to `Windows` system path (such as `C:\Windows\` or `C:\Windows\System32` ) .
+- Or copy `bass.dll` and `mpg123.exe` (can also with `ydict.exe`) file to somewhere in the same directory, and setting that directory in `PATH` System Environment Variables .
 
 #### Mac OS
 
@@ -103,7 +108,7 @@ Flags:
 ydict <word(s) to query>
 ```
 
-2. Query with speech (__Available for MacOS & Linux__)
+2. Query with speech
 
 ```text
 ydict -v 1 <word(s) to query>

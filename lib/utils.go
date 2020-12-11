@@ -57,6 +57,8 @@ func IsAvailableOS() bool {
 		return true
 	case "linux":
 		return true
+	case "windows":
+		return true
 	}
 	return false
 }
