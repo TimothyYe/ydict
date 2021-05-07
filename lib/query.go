@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime"
 	"strings"
 	"time"
 
@@ -64,6 +65,12 @@ func (this QueryParam) DoQuery() {
 
 	//Init spinner
 	var s *spinner.Spinner
+
+	// disable the spinner on windows system
+	if runtime.GOOS == "windows" {
+		this.IsQuiet = true
+	}
+
 	if !this.IsQuiet {
 		s = spinner.New(spinner.CharSets[35], 100*time.Millisecond)
 		s.Prefix = "Querying... "
