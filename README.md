@@ -45,7 +45,7 @@ brew install timothyye/tap/ydict
 #### Using Go
 
 ```bash
-go get github.com/TimothyYe/ydict
+go install github.com/TimothyYe/ydict
 ```
 
 #### Manual Installation
