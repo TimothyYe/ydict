@@ -106,8 +106,13 @@ func ClearCahceFiles() {
 
 func getDictDir() string {
 	dbDir := os.Getenv("YDICT_DB")
+	xdgCacheDir := os.Getenv("XDG_CACHE_HOME")
 	if dbDir == "" {
-		dbDir = filepath.Join(os.Getenv("HOME"), ".ydict")
+		if xdgCacheDir != "" {
+			dbDir = filepath.Join(xdgCacheDir, "ydict")
+		} else {
+			dbDir = filepath.Join(os.Getenv("HOME"), ".cache/ydict")
+		}
 	}
 
 	return dbDir
@@ -115,8 +120,13 @@ func getDictDir() string {
 
 func getDictDBDir() string {
 	dbDir := os.Getenv("YDICT_DB")
+	xdgCacheDir := os.Getenv("XDG_CACHE_HOME")
 	if dbDir == "" {
-		dbDir = filepath.Join(os.Getenv("HOME"), ".ydict")
+		if xdgCacheDir != "" {
+			dbDir = filepath.Join(xdgCacheDir, "ydict")
+		} else {
+			dbDir = filepath.Join(os.Getenv("HOME"), ".cache/ydict")
+		}
 	}
 
 	ydictDir := filepath.Join(dbDir, "db")
